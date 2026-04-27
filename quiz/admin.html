@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="midnight">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>题库管理后台</title>
+<style>
+/* ══ THEME TOKENS ══ */
+html[data-theme="midnight"]{
+  --bg:#1A1C1F; --bg2:#23262A; --bg3:#2D3137; --bg4:#3B4048;
+  --sep:rgba(200,210,225,0.07); --sep2:rgba(200,210,225,0.13);
+  --t1:#E8ECF1; --t2:rgba(232,236,241,.62); --t3:rgba(232,236,241,.36);
+  --blue:#7BA4D6; --green:#7FB096; --red:#D97A73; --orange:#C9A46A;
+  --r:10px; --r-sm:6px; --r-lg:16px; --fs:15px;
+  --f-sans:-apple-system,'SF Pro Display','PingFang SC','Helvetica Neue',sans-serif;
+  --f-mono:'JetBrains Mono','SF Mono',Menlo,monospace;
+}
+html[data-theme="cream"]{
+  --bg:#F4EEE4; --bg2:#FDFAF4; --bg3:#EAE2D2; --bg4:#D4C9B3;
+  --sep:rgba(74,52,30,0.10); --sep2:rgba(74,52,30,0.16);
+  --t1:#251C12; --t2:rgba(37,28,18,.62); --t3:rgba(37,28,18,.38);
+  --blue:#C8623A; --green:#567B5A; --red:#B24A3E; --orange:#B8772B;
+  --r:10px; --r-sm:6px; --r-lg:16px; --fs:15px;
+  --f-sans:-apple-system,'SF Pro Display','PingFang SC','Helvetica Neue',sans-serif;
+  --f-mono:'JetBrains Mono','SF Mono',Menlo,monospace;
+}
+html[data-theme="terminal"]{
+  --bg:#0A0E0C; --bg2:#121815; --bg3:#1B2420; --bg4:#2A3832;
+  --sep:rgba(120,200,150,0.10); --sep2:rgba(120,200,150,0.22);
+  --t1:#D8E6DD; --t2:rgba(216,230,221,.62); --t3:rgba(216,230,221,.38);
+  --blue:#4ADE80; --green:#4ADE80; --red:#F06E6E; --orange:#D4B85A;
+  --r:4px; --r-sm:3px; --r-lg:6px; --fs:15px;
+  --f-sans:'JetBrains Mono','SF Mono',Menlo,'PingFang SC',monospace;
+  --f-mono:'JetBrains Mono','SF Mono',Menlo,monospace;
+}
+html[data-theme="terminal"] body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:1000;
+  background:repeating-linear-gradient(to bottom,transparent 0,transparent 2px,rgba(120,200,150,0.015) 2px,rgba(120,200,150,0.015) 3px);
+  mix-blend-mode:overlay;
+}
+
+/* ══ RESET ══ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;background:var(--bg);color:var(--t1);font-family:var(--f-sans);font-size:var(--fs);-webkit-font-smoothing:antialiased;}
+button{font-family:inherit;cursor:pointer;}
+a{color:var(--blue);text-decoration:none;}
+
+/* ══ LAYOUT ══ */
+#app{
+  display:flex;flex-direction:column;
+  min-height:100dvh;max-width:1100px;margin:0 auto;padding:0 16px;
+}
+
+/* ── Topbar ── */
+#topbar{
+  display:flex;align-items:center;gap:12px;
+  padding:16px 0 14px;border-bottom:1px solid var(--sep2);
+  flex-shrink:0;
+}
+#topbar h1{font-size:17px;font-weight:700;flex:1;}
+.theme-row{display:flex;gap:6px;align-items:center;}
+.th-btn{
+  width:22px;height:22px;border-radius:50%;border:2px solid transparent;
+  cursor:pointer;transition:border-color .15s;
+}
+.th-btn.on{border-color:var(--t1);}
+.th-btn[data-t="midnight"]{background:#23262A;}
+.th-btn[data-t="cream"]{background:#FDFAF4;border:2px solid #D4C9B3;}
+.th-btn[data-t="terminal"]{background:#121815;}
+.back-link{
+  display:inline-flex;align-items:center;gap:6px;
+  color:var(--t2);font-size:13px;padding:5px 10px;
+  background:var(--bg3);border-radius:var(--r-sm);
+  border:1px solid var(--sep2);transition:color .14s;
+}
+.back-link:hover{color:var(--t1);}
+
+/* ── Tabs ── */
+#tabs{
+  display:flex;gap:4px;padding:14px 0 0;
+  border-bottom:1px solid var(--sep2);flex-shrink:0;
+}
+.tab{
+  padding:8px 18px;font-size:14px;font-weight:600;
+  background:none;border:none;color:var(--t3);
+  border-bottom:2px solid transparent;margin-bottom:-1px;
+  transition:color .14s,border-color .14s;
+}
+.tab.on{color:var(--blue);border-bottom-color:var(--blue);}
+
+/* ── Content ── */
+#content{flex:1;overflow-y:auto;padding:20px 0 40px;}
+
+/* ── Stats bar ── */
+.stat-bar{
+  display:flex;flex-wrap:wrap;gap:12px;
+  margin-bottom:20px;
+}
+.stat-card{
+  background:var(--bg2);border:1px solid var(--sep2);
+  border-radius:var(--r);padding:14px 20px;flex:1;min-width:140px;
+}
+.stat-card .sv{font-size:26px;font-weight:700;color:var(--t1);}
+.stat-card .sl{font-size:12px;color:var(--t3);margin-top:3px;}
+
+/* ── Toolbar ── */
+.toolbar{
+  display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;
+}
+.search-box{
+  flex:1;min-width:160px;max-width:300px;
+  background:var(--bg3);border:1px solid var(--sep2);
+  border-radius:var(--r-sm);padding:7px 12px;
+  color:var(--t1);font-size:14px;
+}
+.search-box::placeholder{color:var(--t3);}
+.search-box:focus{outline:none;border-color:var(--blue);}
+.sort-select{
+  background:var(--bg3);border:1px solid var(--sep2);
+  border-radius:var(--r-sm);padding:7px 10px;
+  color:var(--t1);font-size:13px;
+}
+.sort-select:focus{outline:none;}
+.count-label{font-size:13px;color:var(--t3);margin-left:auto;}
+
+/* ── User Cards ── */
+.user-grid{display:flex;flex-direction:column;gap:10px;}
+.user-card{
+  background:var(--bg2);border:1px solid var(--sep2);
+  border-radius:var(--r);overflow:hidden;
+  transition:border-color .14s;
+}
+.user-card:hover{border-color:var(--sep2);}
+.user-head{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 16px;cursor:pointer;user-select:none;
+}
+.user-head:hover{background:var(--bg3);}
+.uid-badge{
+  font-family:var(--f-mono);font-size:13px;font-weight:600;
+  background:var(--bg3);border:1px solid var(--sep2);
+  border-radius:var(--r-sm);padding:4px 10px;color:var(--blue);
+  flex-shrink:0;
+}
+.user-meta{flex:1;min-width:0;}
+.user-meta .um-row{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:13px;color:var(--t2);margin-top:3px;}
+.um-chip{display:inline-flex;align-items:center;gap:4px;}
+.um-chip .num{font-weight:600;color:var(--t1);}
+.user-time{font-size:12px;color:var(--t3);flex-shrink:0;text-align:right;}
+.chevron{font-size:12px;color:var(--t3);flex-shrink:0;transition:transform .2s;}
+.user-card.open .chevron{transform:rotate(180deg);}
+
+/* Delete btn */
+.del-btn{
+  flex-shrink:0;padding:5px 12px;font-size:12px;font-weight:600;
+  background:none;border:1px solid var(--red);color:var(--red);
+  border-radius:var(--r-sm);transition:background .14s;
+}
+.del-btn:hover{background:var(--red);color:#fff;}
+.del-btn:disabled{opacity:.5;cursor:not-allowed;}
+
+/* ── User detail (sets) ── */
+.user-detail{
+  display:none;border-top:1px solid var(--sep2);padding:12px 16px 16px;
+}
+.user-card.open .user-detail{display:block;}
+.detail-loading{color:var(--t3);font-size:13px;padding:8px 0;}
+.sets-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px;}
+.sets-table th{
+  text-align:left;padding:7px 10px;font-size:11px;font-weight:600;
+  color:var(--t3);letter-spacing:.5px;text-transform:uppercase;
+  border-bottom:1px solid var(--sep2);
+}
+.sets-table td{padding:9px 10px;border-bottom:1px solid var(--sep);}
+.sets-table tr:last-child td{border-bottom:none;}
+.pct-bar{
+  display:inline-block;height:6px;border-radius:3px;
+  background:var(--green);vertical-align:middle;margin-right:6px;
+  min-width:2px;
+}
+.pct-val{color:var(--t2);}
+.tag-wrong{color:var(--red);font-weight:600;}
+.tag-bm{color:var(--orange);}
+.sync-time{font-size:11px;color:var(--t3);}
+
+/* ── Empty state ── */
+.empty-state{
+  text-align:center;padding:60px 20px;color:var(--t3);font-size:14px;
+}
+.empty-state .emoji{font-size:36px;margin-bottom:12px;}
+
+/* ── Set Grid ── */
+.set-grid-table{width:100%;border-collapse:collapse;font-size:14px;}
+.set-grid-table th{
+  text-align:left;padding:8px 12px;font-size:11px;font-weight:600;
+  color:var(--t3);letter-spacing:.5px;text-transform:uppercase;
+  border-bottom:1px solid var(--sep2);background:var(--bg2);
+  position:sticky;top:0;
+}
+.set-grid-table td{
+  padding:11px 12px;border-bottom:1px solid var(--sep);vertical-align:middle;
+}
+.set-grid-table tr:hover td{background:var(--bg3);}
+.set-name-cell .sl{font-size:13px;font-weight:600;color:var(--t1);}
+.set-name-cell .sd{font-size:12px;color:var(--t3);margin-top:2px;}
+.set-count{font-family:var(--f-mono);font-weight:600;color:var(--blue);}
+.has-analysis{
+  font-size:11px;padding:2px 7px;border-radius:var(--r-sm);
+  font-weight:600;
+}
+.has-analysis.yes{background:rgba(127,176,150,0.18);color:var(--green);}
+.has-analysis.no{background:var(--bg3);color:var(--t3);}
+
+/* ── Toast ── */
+#toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  background:var(--bg4);color:var(--t1);padding:9px 20px;
+  border-radius:20px;font-size:13px;font-weight:500;
+  opacity:0;pointer-events:none;transition:opacity .2s;z-index:9999;
+  white-space:nowrap;
+}
+#toast.show{opacity:1;}
+
+/* ── Confirm dialog ── */
+#confirm-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);
+  display:flex;align-items:center;justify-content:center;
+  z-index:8000;display:none;
+}
+#confirm-overlay.show{display:flex;}
+.confirm-box{
+  background:var(--bg2);border:1px solid var(--sep2);
+  border-radius:var(--r-lg);padding:28px 28px 22px;max-width:360px;width:90%;
+}
+.confirm-box h3{font-size:16px;margin-bottom:10px;}
+.confirm-box p{font-size:14px;color:var(--t2);line-height:1.6;margin-bottom:20px;}
+.confirm-actions{display:flex;gap:10px;justify-content:flex-end;}
+.btn-cancel{
+  padding:8px 16px;font-size:14px;border-radius:var(--r-sm);
+  background:var(--bg3);border:1px solid var(--sep2);color:var(--t2);
+}
+.btn-cancel:hover{color:var(--t1);}
+.btn-danger{
+  padding:8px 16px;font-size:14px;border-radius:var(--r-sm);font-weight:600;
+  background:var(--red);border:none;color:#fff;
+}
+.btn-danger:hover{opacity:.85;}
+
+/* ── Loading ── */
+.loading-msg{
+  color:var(--t3);font-size:14px;text-align:center;padding:40px;
+}
+
+@media(max-width:600px){
+  .stat-card{min-width:120px;}
+  .user-time{display:none;}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- Topbar -->
+  <header id="topbar">
+    <h1>📋 题库管理后台</h1>
+    <a class="back-link" href="Index.html">← 返回答题</a>
+    <div class="theme-row">
+      <button class="th-btn on" data-t="midnight" title="暗夜"></button>
+      <button class="th-btn" data-t="cream" title="奶油"></button>
+      <button class="th-btn" data-t="terminal" title="暗夜绿"></button>
+    </div>
+  </header>
+
+  <!-- Tabs -->
+  <nav id="tabs">
+    <button class="tab on" data-tab="users">用户管理</button>
+    <button class="tab" data-tab="sets">题库列表</button>
+  </nav>
+
+  <!-- Content -->
+  <div id="content">
+    <div id="view-users" class="view">
+      <div class="loading-msg">加载中…</div>
+    </div>
+    <div id="view-sets" class="view" style="display:none">
+      <div class="loading-msg">加载中…</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- Confirm dialog -->
+<div id="confirm-overlay">
+  <div class="confirm-box">
+    <h3 id="confirm-title">确认删除</h3>
+    <p id="confirm-msg"></p>
+    <div class="confirm-actions">
+      <button class="btn-cancel" id="confirm-cancel">取消</button>
+      <button class="btn-danger" id="confirm-ok">删除</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'admin_api.php';
+
+// ── Theme ────────────────────────────────────────────────────────
+function applyTheme(t){
+  document.documentElement.dataset.theme = t;
+  document.querySelectorAll('.th-btn').forEach(b=>b.classList.toggle('on', b.dataset.t===t));
+  try{ localStorage.setItem('admin_theme', t); }catch(e){}
+}
+document.querySelectorAll('.th-btn').forEach(b=>b.onclick=()=>applyTheme(b.dataset.t));
+try{ const t=localStorage.getItem('admin_theme'); if(t) applyTheme(t); }catch(e){}
+
+// ── Toast ────────────────────────────────────────────────────────
+let _toastTimer;
+function showToast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(()=>el.classList.remove('show'), 2600);
+}
+
+// ── Confirm dialog ───────────────────────────────────────────────
+let _confirmResolve = null;
+function showConfirm(title, msg){
+  return new Promise(resolve=>{
+    _confirmResolve = resolve;
+    document.getElementById('confirm-title').textContent = title;
+    document.getElementById('confirm-msg').textContent = msg;
+    document.getElementById('confirm-overlay').classList.add('show');
+  });
+}
+document.getElementById('confirm-cancel').onclick = ()=>{
+  document.getElementById('confirm-overlay').classList.remove('show');
+  if(_confirmResolve){ _confirmResolve(false); _confirmResolve=null; }
+};
+document.getElementById('confirm-ok').onclick = ()=>{
+  document.getElementById('confirm-overlay').classList.remove('show');
+  if(_confirmResolve){ _confirmResolve(true); _confirmResolve=null; }
+};
+
+// ── Tabs ─────────────────────────────────────────────────────────
+let _activeTab = 'users';
+let _usersLoaded = false, _setsLoaded = false;
+
+document.querySelectorAll('.tab').forEach(btn=>{
+  btn.onclick = ()=>{
+    _activeTab = btn.dataset.tab;
+    document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on', b===btn));
+    document.getElementById('view-users').style.display = _activeTab==='users'?'':'none';
+    document.getElementById('view-sets').style.display  = _activeTab==='sets' ?'':'none';
+    if(_activeTab==='users' && !_usersLoaded) loadUsers();
+    if(_activeTab==='sets'  && !_setsLoaded)  loadSets();
+  };
+});
+
+// ── Format helpers ───────────────────────────────────────────────
+function fmtDate(iso){
+  if(!iso) return '—';
+  const d = new Date(iso);
+  if(isNaN(d)) return iso;
+  return d.toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+}
+
+// ── Users view ───────────────────────────────────────────────────
+let _allUsers = [];
+let _searchQ = '';
+let _sortBy = 'lastSync';
+
+async function loadUsers(){
+  _usersLoaded = true;
+  const view = document.getElementById('view-users');
+  view.innerHTML = '<div class="loading-msg">正在加载用户数据…</div>';
+  try{
+    const r = await fetch(API + '?action=list_users');
+    const d = await r.json();
+    _allUsers = d.users || [];
+    renderUsersView();
+  }catch(e){
+    view.innerHTML = `<div class="empty-state"><div class="emoji">⚠️</div>加载失败：${e.message}<br><small>请确认 admin_api.php 已部署到服务器</small></div>`;
+  }
+}
+
+function renderUsersView(){
+  const view = document.getElementById('view-users');
+  let users = [..._allUsers];
+
+  // Filter
+  if(_searchQ){
+    const q = _searchQ.toLowerCase();
+    users = users.filter(u=>u.uid.toLowerCase().includes(q));
+  }
+
+  // Sort
+  if(_sortBy==='lastSync') users.sort((a,b)=>b.lastSync.localeCompare(a.lastSync));
+  else if(_sortBy==='answered') users.sort((a,b)=>b.answered-a.answered);
+  else if(_sortBy==='uid') users.sort((a,b)=>a.uid.localeCompare(b.uid));
+
+  // Stats
+  const total = _allUsers.length;
+  const totalAns = _allUsers.reduce((s,u)=>s+u.answered,0);
+  const totalWrong = _allUsers.reduce((s,u)=>s+u.wrong,0);
+
+  let html = `
+    <div class="stat-bar">
+      <div class="stat-card"><div class="sv">${total}</div><div class="sl">用户总数</div></div>
+      <div class="stat-card"><div class="sv">${totalAns}</div><div class="sl">总答题次</div></div>
+      <div class="stat-card"><div class="sv">${totalWrong}</div><div class="sl">总错题次</div></div>
+    </div>
+    <div class="toolbar">
+      <input class="search-box" id="user-search" placeholder="搜索用户ID…" value="${_searchQ}">
+      <select class="sort-select" id="user-sort">
+        <option value="lastSync" ${_sortBy==='lastSync'?'selected':''}>按最近同步</option>
+        <option value="answered" ${_sortBy==='answered'?'selected':''}>按答题数</option>
+        <option value="uid"      ${_sortBy==='uid'?'selected':''}>按 ID 排序</option>
+      </select>
+      <span class="count-label">共 ${users.length} 位用户</span>
+    </div>
+    <div class="user-grid">`;
+
+  if(users.length===0){
+    html += `<div class="empty-state"><div class="emoji">👥</div>${_searchQ?'没有匹配的用户':'暂无用户数据'}</div>`;
+  } else {
+    users.forEach(u=>{
+      const pct = u.answered > 0 ? Math.round(u.correct/u.answered*100) : 0;
+      html += `
+      <div class="user-card" id="uc-${u.uid}">
+        <div class="user-head" data-uid="${u.uid}">
+          <div class="uid-badge">${u.uid}</div>
+          <div class="user-meta">
+            <div class="um-row">
+              <span class="um-chip">练了 <span class="num">${u.sets}</span> 套题库</span>
+              <span class="um-chip">答题 <span class="num">${u.answered}</span> 次</span>
+              <span class="um-chip" style="color:var(--green)">答对 <span class="num">${pct}%</span></span>
+              ${u.wrong>0?`<span class="um-chip" style="color:var(--red)">错误 <span class="num">${u.wrong}</span> 次</span>`:''}
+            </div>
+          </div>
+          <span class="user-time">${fmtDate(u.lastSync)}</span>
+          <button class="del-btn" data-uid="${u.uid}">删除</button>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="user-detail" id="ud-${u.uid}">
+          <div class="detail-loading">点击展开加载详情…</div>
+        </div>
+      </div>`;
+    });
+  }
+  html += `</div>`;
+  view.innerHTML = html;
+
+  // Events
+  document.getElementById('user-search')?.addEventListener('input', e=>{
+    _searchQ = e.target.value; renderUsersView();
+  });
+  document.getElementById('user-sort')?.addEventListener('change', e=>{
+    _sortBy = e.target.value; renderUsersView();
+  });
+
+  view.querySelectorAll('.user-head').forEach(head=>{
+    head.addEventListener('click', e=>{
+      if(e.target.classList.contains('del-btn')) return; // handled below
+      const uid = head.dataset.uid;
+      const card = document.getElementById('uc-'+uid);
+      const isOpen = card.classList.contains('open');
+      card.classList.toggle('open', !isOpen);
+      if(!isOpen) loadUserDetail(uid);
+    });
+  });
+
+  view.querySelectorAll('.del-btn').forEach(btn=>{
+    btn.addEventListener('click', async e=>{
+      e.stopPropagation();
+      const uid = btn.dataset.uid;
+      const ok = await showConfirm('删除用户', `确认删除用户 "${uid}" 的所有答题记录？此操作不可撤销。`);
+      if(!ok) return;
+      btn.disabled = true;
+      try{
+        const r = await fetch(`${API}?action=delete_user&uid=${encodeURIComponent(uid)}`, {method:'POST'});
+        const d = await r.json();
+        if(d.error) throw new Error(d.error);
+        showToast(`已删除用户 ${uid}（${d.deleted} 条记录）`);
+        _allUsers = _allUsers.filter(u=>u.uid!==uid);
+        renderUsersView();
+      }catch(err){
+        showToast('删除失败：' + err.message);
+        btn.disabled = false;
+      }
+    });
+  });
+}
+
+async function loadUserDetail(uid){
+  const detailEl = document.getElementById('ud-'+uid);
+  if(!detailEl || detailEl.dataset.loaded) return;
+  detailEl.dataset.loaded = '1';
+  detailEl.innerHTML = '<div class="detail-loading">加载中…</div>';
+  try{
+    const r = await fetch(`${API}?action=user_sets&uid=${encodeURIComponent(uid)}`);
+    const d = await r.json();
+    const sets = d.sets || [];
+    if(sets.length===0){
+      detailEl.innerHTML = '<div class="detail-loading" style="color:var(--t3)">暂无题库记录</div>';
+      return;
+    }
+    let html = `<table class="sets-table">
+      <thead><tr>
+        <th>题库</th>
+        <th>已答</th>
+        <th>答对率</th>
+        <th>错题</th>
+        <th>收藏</th>
+        <th>最近同步</th>
+      </tr></thead><tbody>`;
+    sets.forEach(s=>{
+      const pctW = Math.min(100, s.pct);
+      html += `<tr>
+        <td>${s.setLabel || s.setName}</td>
+        <td>${s.answered}${s.total?' / '+s.total:''}</td>
+        <td>
+          <span class="pct-bar" style="width:${pctW*0.6}px"></span>
+          <span class="pct-val">${s.pct}%</span>
+        </td>
+        <td class="tag-wrong">${s.wrong > 0 ? s.wrong : '<span style="color:var(--t3)">—</span>'}</td>
+        <td class="tag-bm">${s.bookmarks > 0 ? '⭐'+s.bookmarks : '<span style="color:var(--t3)">—</span>'}</td>
+        <td class="sync-time">${fmtDate(s.syncedAt)}</td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+    detailEl.innerHTML = html;
+  }catch(e){
+    detailEl.innerHTML = `<div class="detail-loading">加载失败：${e.message}</div>`;
+  }
+}
+
+// ── Sets view ────────────────────────────────────────────────────
+async function loadSets(){
+  _setsLoaded = true;
+  const view = document.getElementById('view-sets');
+  view.innerHTML = '<div class="loading-msg">正在加载题库列表…</div>';
+  try{
+    const r = await fetch(API + '?action=list_sets');
+    const sets = await r.json();
+    if(!Array.isArray(sets)) throw new Error('格式错误');
+
+    const totalQ = sets.reduce((s,q)=>s+(q.count||0), 0);
+    const withAI = sets.filter(q=>q.has_analysis).length;
+
+    let html = `
+      <div class="stat-bar">
+        <div class="stat-card"><div class="sv">${sets.length}</div><div class="sl">题库数</div></div>
+        <div class="stat-card"><div class="sv">${totalQ.toLocaleString()}</div><div class="sl">题目总数</div></div>
+        <div class="stat-card"><div class="sv">${withAI}</div><div class="sl">含 AI 解析</div></div>
+      </div>
+      <table class="set-grid-table">
+        <thead><tr>
+          <th>#</th>
+          <th>题库名称</th>
+          <th>题目数</th>
+          <th>AI 解析</th>
+          <th>文件</th>
+        </tr></thead>
+        <tbody>`;
+
+    sets.forEach((s,i)=>{
+      html += `<tr>
+        <td style="color:var(--t3);font-size:12px">${i+1}</td>
+        <td class="set-name-cell">
+          <div class="sl">${s.label}</div>
+          <div class="sd">${s.desc||''}</div>
+        </td>
+        <td class="set-count">${(s.count||0).toLocaleString()}</td>
+        <td><span class="has-analysis ${s.has_analysis?'yes':'no'}">${s.has_analysis?'✓ 有':'—'}</span></td>
+        <td style="font-size:12px;color:var(--t3);font-family:var(--f-mono)">${s.file||''}</td>
+      </tr>`;
+    });
+
+    html += '</tbody></table>';
+    view.innerHTML = html;
+  }catch(e){
+    view.innerHTML = `<div class="empty-state"><div class="emoji">⚠️</div>加载失败：${e.message}</div>`;
+  }
+}
+
+// ── Init ─────────────────────────────────────────────────────────
+loadUsers();
+</script>
+</body>
+</html>
