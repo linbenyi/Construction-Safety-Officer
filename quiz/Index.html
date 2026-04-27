@@ -406,7 +406,17 @@ html[data-theme="terminal"] #qno-display{border-radius:0;border:1px solid var(--
   grid-template-columns:1fr;
   grid-template-rows:minmax(0,1fr) minmax(0,1fr);
   overflow:hidden;
+  position:relative;
 }
+/* Swipe hints */
+#swipe-hint{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:rgba(0,0,0,0.68);color:#fff;padding:10px 22px;
+  border-radius:24px;font-size:15px;font-weight:600;letter-spacing:.04em;
+  pointer-events:none;opacity:0;transition:opacity 0.15s;z-index:9999;
+  white-space:nowrap;
+}
+#swipe-hint.show{opacity:1;}
 #q-wrap{
   overflow:hidden;
   position:relative;
@@ -910,10 +920,11 @@ html[data-theme="terminal"] .land-title{font-family:var(--f-mono);}
 html[data-theme="terminal"] .land-sub{font-family:var(--f-mono);}
 
 .land-back-btn{
-  display:block;margin:16px auto 0;
+  position:fixed;top:54px;right:14px;z-index:100;
+  width:32px;height:32px;display:flex;align-items:center;justify-content:center;
   background:var(--bg3);border:1px solid var(--sep2);color:var(--t2);
-  font:500 calc(var(--fs)*13/16) var(--f-sans);padding:9px 22px;
-  border-radius:var(--r-sm);cursor:pointer;transition:all .14s;
+  font:600 16px var(--f-sans);
+  border-radius:50%;cursor:pointer;transition:all .14s;
 }
 .land-back-btn:hover{background:var(--bg4);color:var(--t1);}
 html[data-theme="terminal"] .land-back-btn{border-radius:0;font-family:var(--f-mono);}
@@ -1011,7 +1022,7 @@ html[data-theme="terminal"] .lt-dot{border-radius:0;}
       <h1 class="land-title">安全生产题库</h1>
       <p class="land-sub">选择题库，开始练习</p>
     </div>
-    <button class="land-back-btn hidden" id="land-back-btn">← 返回当前题库</button>
+    <button class="land-back-btn hidden" id="land-back-btn">✕</button>
     <div id="set-grid" class="set-grid">
       <div class="set-loading">正在加载题库列表…</div>
     </div>
@@ -1169,6 +1180,7 @@ html[data-theme="terminal"] .lt-dot{border-radius:0;}
 
   <!-- ══════════════ MAIN ══════════════ -->
   <main id="main">
+    <div id="swipe-hint"></div>
 
     <!-- Question area -->
     <section id="q-wrap">
@@ -2467,22 +2479,18 @@ window.addEventListener('keydown', e=>{
   }
 
   function slideNav(dir, doNav){
-    // dir: -1 → left (next), +1 → right (prev)
+    // dir: 1 → to right (prev), -1 → to left (next)
     main.style.transition = 'transform 0.22s ease-in';
-    main.style.transform = `translateX(${dir * -100}vw)`;
+    main.style.transform = `translateX(${dir * 100}vw)`;
     main.addEventListener('transitionend', ()=>{
-      // update content while off-screen
       doNav();
-      // jump to opposite edge instantly
       main.style.transition = 'none';
-      main.style.transform = `translateX(${dir * 100}vw)`;
-      void main.offsetWidth; // force reflow
-      // slide in
+      main.style.transform = `translateX(${dir * -100}vw)`;
+      void main.offsetWidth;
       main.style.transition = 'transform 0.28s cubic-bezier(0.22,0.61,0.36,1)';
       main.style.transform = '';
       main.addEventListener('transitionend', ()=>{
         main.style.transition = '';
-        main.style.transform = '';
       }, {once:true});
     }, {once:true});
   }
@@ -2495,6 +2503,7 @@ window.addEventListener('keydown', e=>{
     main.style.transition = 'none';
   }, {passive:true});
 
+  const hintEl = document.getElementById('swipe-hint');
   main.addEventListener('touchmove', e=>{
     if(!dragging) return;
     const dx = e.touches[0].clientX - startX;
@@ -2505,17 +2514,29 @@ window.addEventListener('keydown', e=>{
     }
     if(horizOk){
       e.preventDefault();
-      // elastic resistance at list edges
       let eff = dx;
-      if((dx < 0 && state.idx >= QUESTIONS.length-1) || (dx > 0 && state.idx <= 0))
+      if((dx > 0 && state.idx === 0) || (dx < 0 && state.idx === QUESTIONS.length-1))
         eff = dx * 0.18;
       main.style.transform = `translateX(${eff}px)`;
+
+      // Show hints
+      if(Math.abs(dx) > 20){
+        hintEl.classList.add('show');
+        if(dx > 0){
+          hintEl.textContent = state.idx > 0 ? '上一题' : '没有题了';
+        } else {
+          hintEl.textContent = state.idx < QUESTIONS.length - 1 ? '下一题' : '没有题了';
+        }
+      } else {
+        hintEl.classList.remove('show');
+      }
     }
   }, {passive:false});
 
   main.addEventListener('touchend', e=>{
     if(!dragging) return;
     dragging = false; horizOk = false;
+    hintEl.classList.remove('show');
     const dx = e.changedTouches[0].clientX - startX;
     const thr = window.innerWidth / 3;
     if(Math.abs(dx) < thr){ snapBack(); return; }
