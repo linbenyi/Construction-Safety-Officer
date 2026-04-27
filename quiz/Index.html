@@ -1376,7 +1376,7 @@ function startQuiz(setMeta, questions){
     savedAnswers:{}, wrongCounts:{},
     mode:'instant',
     exam:{ sessionStart:null,qStart:null,sessionTimer:null,qTimer:null,sessionElapsed:0,qElapsed:0 },
-    read:{ countdownTimer:null, countdown:0 },
+    read:{ countdownTimer:null, countdown:0, autoAdvanceTimer:null },
     instantSkipAnswered:true, instantSkipUnanswered:false,
   });
   $$('.seg button').forEach(b=>b.classList.toggle('on', b.dataset.mode==='instant'));
@@ -1563,7 +1563,7 @@ const state = {
     sessionTimer:null, qTimer:null,
     sessionElapsed:0, qElapsed:0,
   },
-  read:{ countdownTimer:null, countdown:0 },
+  read:{ countdownTimer:null, countdown:0, autoAdvanceTimer:null },
   instantSkipAnswered:true,
   instantSkipUnanswered:false,
 };
@@ -1707,7 +1707,8 @@ function qlResetModeChanged(){
 function onOptionClick(k){
   const q = QUESTIONS[state.idx];
   if(state.answered) return;
-  stopReadCountdown(); // cancel auto-reveal if user clicks manually
+  stopReadCountdown();
+  stopReadAutoAdvance(); // cancel both timers if user clicks manually
   if(q.type==='multi'){
     if(state.selected.has(k)) state.selected.delete(k);
     else state.selected.add(k);
@@ -1780,7 +1781,7 @@ function confirmAnswer(){
     $('#score-correct').textContent = state.correctCount;
     if(state.wrongQs.size>0){ $('#wrong-review').classList.remove('hidden'); $('#wrong-review').textContent='✗ 错题 '+state.wrongQs.size; }
     renderQL();
-    if(state.mode==='exam') $('#exam-answered').textContent = state.answeredQs.size;
+    scheduleReadAutoAdvance(); // auto-advance after answer shown
     return;
   }
 
@@ -1886,6 +1887,7 @@ function _getSkipUnanswered(){
 function next(){
   removeStamp();
   stopReadCountdown();
+  stopReadAutoAdvance();
   const skipAns = _getSkipAnswered(), skipUnans = _getSkipUnanswered();
   let i = state.idx + 1;
   while(i < QUESTIONS.length){
@@ -1908,6 +1910,7 @@ function next(){
 function prev(){
   removeStamp();
   stopReadCountdown();
+  stopReadAutoAdvance();
   const skipAns = _getSkipAnswered(), skipUnans = _getSkipUnanswered();
   let i = state.idx - 1;
   while(i >= 0){
@@ -1999,6 +2002,43 @@ function stopReadCountdown(){
   if(cdEl) cdEl.classList.add('hidden');
 }
 
+function stopReadAutoAdvance(){
+  clearTimeout(state.read.autoAdvanceTimer); state.read.autoAdvanceTimer = null;
+}
+
+function scheduleReadAutoAdvance(){
+  stopReadAutoAdvance();
+  const delay = parseInt($('#read-delay-select')?.value || '3');
+  if(!delay) return; // delay=0 → auto-advance off
+
+  const capturedIdx = state.idx;
+
+  function doNext(){
+    if(state.mode!=='read' || state.idx!==capturedIdx) return; // stale
+    next();
+  }
+
+  if(TTS.auto){
+    // build text: question + memory/memo
+    const q = QUESTIONS[capturedIdx];
+    const parts = [];
+    if(!TTS.questionOnly){
+      if(TTS.memo && q.memory) parts.push(q.memory);
+      if(TTS.memo && q.quickMemo) parts.push(q.quickMemo);
+      if(TTS.script && q.reason) parts.push(q.reason);
+    }
+    const qText = q.qHtml.replace(/<[^>]*>/g,''); // strip HTML tags for TTS
+    const text = qText + (parts.length ? '。' + parts.join('。') : '');
+    ttsSpeak(text, ()=>{
+      // small pause after speech, then advance
+      state.read.autoAdvanceTimer = setTimeout(doNext, 600);
+    });
+  } else {
+    // advance after 2× reveal delay
+    state.read.autoAdvanceTimer = setTimeout(doNext, delay * 2 * 1000);
+  }
+}
+
 function autoRevealAnswer(){
   if(state.answered) return;
   const q = QUESTIONS[state.idx];
@@ -2022,6 +2062,8 @@ function setMode(mode){
   if(state.mode===mode) return;
   stopExamTimers();
   stopReadCountdown();
+  stopReadAutoAdvance();
+  ttsStop();
   state.mode = mode;
   $$('.seg button').forEach(b=>b.classList.toggle('on', b.dataset.mode===mode));
   updateBotForMode();
@@ -2125,8 +2167,8 @@ const TTS = {
 };
 let _ttsUtter = null;
 
-function ttsSpeak(text){
-  if(!window.speechSynthesis || !text) return;
+function ttsSpeak(text, onDone){
+  if(!window.speechSynthesis || !text){ if(onDone) onDone(); return; }
   window.speechSynthesis.cancel();
   _ttsUtter = new SpeechSynthesisUtterance(text);
   _ttsUtter.lang  = 'zh-CN';
@@ -2137,6 +2179,7 @@ function ttsSpeak(text){
   _ttsUtter.onend = _ttsUtter.onerror = ()=>{
     btn.classList.remove('speaking');
     _ttsUtter = null;
+    if(onDone) onDone();
   };
   window.speechSynthesis.speak(_ttsUtter);
 }
