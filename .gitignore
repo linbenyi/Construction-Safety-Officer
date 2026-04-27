@@ -1,0 +1,11 @@
+# Backup files
+quiz/Backup/
+*.bak
+
+# Progress exports (personal data)
+quiz/index_progress_*.json
+quiz/quiz_progress_*.json
+
+# OS
+.DS_Store
+Thumbs.db
