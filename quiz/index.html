@@ -1339,6 +1339,20 @@ html[data-theme="terminal"] .lt-dot{border-radius:0;}
 </div>
 
 <script>
+/* ── URL 参数处理：?uid=xxxx 或 ?ID=xxxx 自动设置用户ID ── */
+(function(){
+  try{
+    const p = new URLSearchParams(location.search);
+    const uid = p.get('uid') || p.get('ID') || p.get('id');
+    if(uid && /^[a-zA-Z0-9_-]{1,16}$/.test(uid)){
+      localStorage.setItem('quiz_uid', uid);
+    }
+    // ?set=xxxx 自动进入指定题库（由 initLanding 读取）
+    const set = p.get('set') || p.get('quiz');
+    if(set) window._autoLoadSet = set;
+  }catch(e){}
+})();
+
 /* ══════════════ DATA ══════════════ */
 let QUESTIONS = [];
 let _currentSetLabel = '';
@@ -1494,8 +1508,20 @@ async function initLanding(){
           console.error(err);
         }
       };
-      grid.appendChild(card);
+        grid.appendChild(card);
     });
+
+    // ?set=xxxx URL 参数自动进入题库
+    if(window._autoLoadSet){
+      const target = sets.find(s=>s.name===window._autoLoadSet||s.file.includes(window._autoLoadSet));
+      if(target){
+        try{
+          const r = await fetch(target.file);
+          if(r.ok){ const qs=await r.json(); startQuiz(target, qs); }
+        }catch(e){ console.warn('auto-load set failed', e); }
+      }
+      window._autoLoadSet = null;
+    }
   }catch(err){
     grid.innerHTML = `<div class="set-error">题库列表加载失败：${err.message}</div>`;
     console.error(err);

@@ -7,263 +7,204 @@
 <style>
 /* ══ THEME TOKENS ══ */
 html[data-theme="midnight"]{
-  --bg:#1A1C1F; --bg2:#23262A; --bg3:#2D3137; --bg4:#3B4048;
-  --sep:rgba(200,210,225,0.07); --sep2:rgba(200,210,225,0.13);
-  --t1:#E8ECF1; --t2:rgba(232,236,241,.62); --t3:rgba(232,236,241,.36);
-  --blue:#7BA4D6; --green:#7FB096; --red:#D97A73; --orange:#C9A46A;
-  --r:10px; --r-sm:6px; --r-lg:16px; --fs:15px;
+  --bg:#1A1C1F;--bg2:#23262A;--bg3:#2D3137;--bg4:#3B4048;
+  --sep:rgba(200,210,225,0.07);--sep2:rgba(200,210,225,0.13);
+  --t1:#E8ECF1;--t2:rgba(232,236,241,.62);--t3:rgba(232,236,241,.36);
+  --blue:#7BA4D6;--green:#7FB096;--red:#D97A73;--orange:#C9A46A;--purple:#9E8CC4;
+  --r:10px;--r-sm:6px;--r-lg:16px;--fs:15px;
   --f-sans:-apple-system,'SF Pro Display','PingFang SC','Helvetica Neue',sans-serif;
   --f-mono:'JetBrains Mono','SF Mono',Menlo,monospace;
 }
 html[data-theme="cream"]{
-  --bg:#F4EEE4; --bg2:#FDFAF4; --bg3:#EAE2D2; --bg4:#D4C9B3;
-  --sep:rgba(74,52,30,0.10); --sep2:rgba(74,52,30,0.16);
-  --t1:#251C12; --t2:rgba(37,28,18,.62); --t3:rgba(37,28,18,.38);
-  --blue:#C8623A; --green:#567B5A; --red:#B24A3E; --orange:#B8772B;
-  --r:10px; --r-sm:6px; --r-lg:16px; --fs:15px;
+  --bg:#F4EEE4;--bg2:#FDFAF4;--bg3:#EAE2D2;--bg4:#D4C9B3;
+  --sep:rgba(74,52,30,0.10);--sep2:rgba(74,52,30,0.16);
+  --t1:#251C12;--t2:rgba(37,28,18,.62);--t3:rgba(37,28,18,.38);
+  --blue:#C8623A;--green:#567B5A;--red:#B24A3E;--orange:#B8772B;--purple:#7A5FA3;
+  --r:10px;--r-sm:6px;--r-lg:16px;--fs:15px;
   --f-sans:-apple-system,'SF Pro Display','PingFang SC','Helvetica Neue',sans-serif;
   --f-mono:'JetBrains Mono','SF Mono',Menlo,monospace;
 }
 html[data-theme="terminal"]{
-  --bg:#0A0E0C; --bg2:#121815; --bg3:#1B2420; --bg4:#2A3832;
-  --sep:rgba(120,200,150,0.10); --sep2:rgba(120,200,150,0.22);
-  --t1:#D8E6DD; --t2:rgba(216,230,221,.62); --t3:rgba(216,230,221,.38);
-  --blue:#4ADE80; --green:#4ADE80; --red:#F06E6E; --orange:#D4B85A;
-  --r:4px; --r-sm:3px; --r-lg:6px; --fs:15px;
+  --bg:#0A0E0C;--bg2:#121815;--bg3:#1B2420;--bg4:#2A3832;
+  --sep:rgba(120,200,150,0.10);--sep2:rgba(120,200,150,0.22);
+  --t1:#D8E6DD;--t2:rgba(216,230,221,.62);--t3:rgba(216,230,221,.38);
+  --blue:#4ADE80;--green:#4ADE80;--red:#F06E6E;--orange:#D4B85A;--purple:#B18CE6;
+  --r:4px;--r-sm:3px;--r-lg:6px;--fs:15px;
   --f-sans:'JetBrains Mono','SF Mono',Menlo,'PingFang SC',monospace;
   --f-mono:'JetBrains Mono','SF Mono',Menlo,monospace;
 }
 html[data-theme="terminal"] body::before{
-  content:"";position:fixed;inset:0;pointer-events:none;z-index:1000;
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
   background:repeating-linear-gradient(to bottom,transparent 0,transparent 2px,rgba(120,200,150,0.015) 2px,rgba(120,200,150,0.015) 3px);
   mix-blend-mode:overlay;
 }
-
-/* ══ RESET ══ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;background:var(--bg);color:var(--t1);font-family:var(--f-sans);font-size:var(--fs);-webkit-font-smoothing:antialiased;}
 button{font-family:inherit;cursor:pointer;}
-a{color:var(--blue);text-decoration:none;}
+input,select,textarea{font-family:inherit;}
 
 /* ══ LAYOUT ══ */
-#app{
-  display:flex;flex-direction:column;
-  min-height:100dvh;max-width:1100px;margin:0 auto;padding:0 16px;
-}
+#app{display:flex;flex-direction:column;min-height:100dvh;max-width:1160px;margin:0 auto;padding:0 18px;}
 
 /* ── Topbar ── */
-#topbar{
-  display:flex;align-items:center;gap:12px;
-  padding:16px 0 14px;border-bottom:1px solid var(--sep2);
-  flex-shrink:0;
-}
-#topbar h1{font-size:17px;font-weight:700;flex:1;}
-.theme-row{display:flex;gap:6px;align-items:center;}
-.th-btn{
-  width:22px;height:22px;border-radius:50%;border:2px solid transparent;
-  cursor:pointer;transition:border-color .15s;
-}
+#topbar{display:flex;align-items:center;gap:10px;padding:14px 0 13px;border-bottom:1px solid var(--sep2);flex-shrink:0;}
+#topbar h1{font-size:16px;font-weight:700;flex:1;}
+.theme-row{display:flex;gap:5px;}
+.th-btn{width:20px;height:20px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:border-color .15s;flex-shrink:0;}
 .th-btn.on{border-color:var(--t1);}
 .th-btn[data-t="midnight"]{background:#23262A;}
-.th-btn[data-t="cream"]{background:#FDFAF4;border:2px solid #D4C9B3;}
-.th-btn[data-t="terminal"]{background:#121815;}
-.back-link{
-  display:inline-flex;align-items:center;gap:6px;
-  color:var(--t2);font-size:13px;padding:5px 10px;
-  background:var(--bg3);border-radius:var(--r-sm);
-  border:1px solid var(--sep2);transition:color .14s;
-}
+.th-btn[data-t="cream"]{background:#EAE2D2;}
+.th-btn[data-t="terminal"]{background:#1B2420;}
+.back-link{display:inline-flex;align-items:center;gap:5px;color:var(--t2);font-size:13px;padding:5px 10px;background:var(--bg3);border-radius:var(--r-sm);border:1px solid var(--sep2);text-decoration:none;transition:color .14s;white-space:nowrap;}
 .back-link:hover{color:var(--t1);}
 
 /* ── Tabs ── */
-#tabs{
-  display:flex;gap:4px;padding:14px 0 0;
-  border-bottom:1px solid var(--sep2);flex-shrink:0;
-}
-.tab{
-  padding:8px 18px;font-size:14px;font-weight:600;
-  background:none;border:none;color:var(--t3);
-  border-bottom:2px solid transparent;margin-bottom:-1px;
-  transition:color .14s,border-color .14s;
-}
+#tabs{display:flex;gap:2px;padding:12px 0 0;border-bottom:1px solid var(--sep2);flex-shrink:0;}
+.tab{padding:8px 18px;font-size:14px;font-weight:600;background:none;border:none;color:var(--t3);border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .14s,border-color .14s;}
 .tab.on{color:var(--blue);border-bottom-color:var(--blue);}
 
-/* ── Content ── */
-#content{flex:1;overflow-y:auto;padding:20px 0 40px;}
+/* ── Content scroll area ── */
+#content{flex:1;overflow-y:auto;padding:18px 0 48px;}
+.view{display:none;}
+.view.active{display:block;}
 
-/* ── Stats bar ── */
-.stat-bar{
-  display:flex;flex-wrap:wrap;gap:12px;
-  margin-bottom:20px;
-}
-.stat-card{
-  background:var(--bg2);border:1px solid var(--sep2);
-  border-radius:var(--r);padding:14px 20px;flex:1;min-width:140px;
-}
-.stat-card .sv{font-size:26px;font-weight:700;color:var(--t1);}
-.stat-card .sl{font-size:12px;color:var(--t3);margin-top:3px;}
+/* ── Stat cards ── */
+.stat-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;}
+.stat-card{background:var(--bg2);border:1px solid var(--sep2);border-radius:var(--r);padding:13px 18px;flex:1;min-width:130px;}
+.stat-card .sv{font-size:24px;font-weight:700;}
+.stat-card .sl{font-size:12px;color:var(--t3);margin-top:2px;}
 
 /* ── Toolbar ── */
-.toolbar{
-  display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;
-}
-.search-box{
-  flex:1;min-width:160px;max-width:300px;
-  background:var(--bg3);border:1px solid var(--sep2);
-  border-radius:var(--r-sm);padding:7px 12px;
-  color:var(--t1);font-size:14px;
-}
+.toolbar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.search-box{flex:1;min-width:160px;max-width:280px;background:var(--bg3);border:1px solid var(--sep2);border-radius:var(--r-sm);padding:7px 11px;color:var(--t1);font-size:14px;}
 .search-box::placeholder{color:var(--t3);}
 .search-box:focus{outline:none;border-color:var(--blue);}
-.sort-select{
-  background:var(--bg3);border:1px solid var(--sep2);
-  border-radius:var(--r-sm);padding:7px 10px;
-  color:var(--t1);font-size:13px;
-}
-.sort-select:focus{outline:none;}
-.count-label{font-size:13px;color:var(--t3);margin-left:auto;}
+.sort-sel{background:var(--bg3);border:1px solid var(--sep2);border-radius:var(--r-sm);padding:7px 9px;color:var(--t1);font-size:13px;}
+.sort-sel:focus{outline:none;}
+.count-lbl{font-size:13px;color:var(--t3);margin-left:auto;}
+.arch-toggle{font-size:13px;color:var(--t3);padding:6px 12px;border-radius:var(--r-sm);background:var(--bg3);border:1px solid var(--sep2);transition:color .14s;}
+.arch-toggle:hover,.arch-toggle.on{color:var(--orange);}
+.upload-btn{font-size:13px;font-weight:600;padding:6px 14px;border-radius:var(--r-sm);background:var(--blue);border:none;color:var(--bg);white-space:nowrap;}
+.upload-btn:hover{opacity:.85;}
 
-/* ── User Cards ── */
-.user-grid{display:flex;flex-direction:column;gap:10px;}
-.user-card{
-  background:var(--bg2);border:1px solid var(--sep2);
-  border-radius:var(--r);overflow:hidden;
-  transition:border-color .14s;
-}
-.user-card:hover{border-color:var(--sep2);}
-.user-head{
-  display:flex;align-items:center;gap:12px;
-  padding:14px 16px;cursor:pointer;user-select:none;
-}
+/* ── User cards ── */
+.user-grid{display:flex;flex-direction:column;gap:8px;}
+.user-card{background:var(--bg2);border:1px solid var(--sep2);border-radius:var(--r);overflow:hidden;}
+.user-head{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;user-select:none;}
 .user-head:hover{background:var(--bg3);}
-.uid-badge{
-  font-family:var(--f-mono);font-size:13px;font-weight:600;
-  background:var(--bg3);border:1px solid var(--sep2);
-  border-radius:var(--r-sm);padding:4px 10px;color:var(--blue);
-  flex-shrink:0;
-}
+.uid-badge{font-family:var(--f-mono);font-size:13px;font-weight:600;background:var(--bg3);border:1px solid var(--sep2);border-radius:var(--r-sm);padding:3px 9px;color:var(--blue);flex-shrink:0;}
+.user-card.archived .uid-badge{color:var(--t3);}
 .user-meta{flex:1;min-width:0;}
-.user-meta .um-row{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:13px;color:var(--t2);margin-top:3px;}
-.um-chip{display:inline-flex;align-items:center;gap:4px;}
-.um-chip .num{font-weight:600;color:var(--t1);}
+.um-row{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--t2);margin-top:2px;}
+.um-num{font-weight:600;color:var(--t1);}
 .user-time{font-size:12px;color:var(--t3);flex-shrink:0;text-align:right;}
-.chevron{font-size:12px;color:var(--t3);flex-shrink:0;transition:transform .2s;}
+.chevron{font-size:11px;color:var(--t3);flex-shrink:0;transition:transform .2s;}
 .user-card.open .chevron{transform:rotate(180deg);}
 
-/* Delete btn */
-.del-btn{
-  flex-shrink:0;padding:5px 12px;font-size:12px;font-weight:600;
-  background:none;border:1px solid var(--red);color:var(--red);
-  border-radius:var(--r-sm);transition:background .14s;
-}
-.del-btn:hover{background:var(--red);color:#fff;}
-.del-btn:disabled{opacity:.5;cursor:not-allowed;}
-
-/* ── User detail (sets) ── */
-.user-detail{
-  display:none;border-top:1px solid var(--sep2);padding:12px 16px 16px;
-}
-.user-card.open .user-detail{display:block;}
-.detail-loading{color:var(--t3);font-size:13px;padding:8px 0;}
-.sets-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px;}
-.sets-table th{
-  text-align:left;padding:7px 10px;font-size:11px;font-weight:600;
-  color:var(--t3);letter-spacing:.5px;text-transform:uppercase;
-  border-bottom:1px solid var(--sep2);
-}
-.sets-table td{padding:9px 10px;border-bottom:1px solid var(--sep);}
-.sets-table tr:last-child td{border-bottom:none;}
-.pct-bar{
-  display:inline-block;height:6px;border-radius:3px;
-  background:var(--green);vertical-align:middle;margin-right:6px;
-  min-width:2px;
-}
-.pct-val{color:var(--t2);}
-.tag-wrong{color:var(--red);font-weight:600;}
-.tag-bm{color:var(--orange);}
-.sync-time{font-size:11px;color:var(--t3);}
-
-/* ── Empty state ── */
-.empty-state{
-  text-align:center;padding:60px 20px;color:var(--t3);font-size:14px;
-}
-.empty-state .emoji{font-size:36px;margin-bottom:12px;}
-
-/* ── Set Grid ── */
-.set-grid-table{width:100%;border-collapse:collapse;font-size:14px;}
-.set-grid-table th{
-  text-align:left;padding:8px 12px;font-size:11px;font-weight:600;
-  color:var(--t3);letter-spacing:.5px;text-transform:uppercase;
-  border-bottom:1px solid var(--sep2);background:var(--bg2);
-  position:sticky;top:0;
-}
-.set-grid-table td{
-  padding:11px 12px;border-bottom:1px solid var(--sep);vertical-align:middle;
-}
-.set-grid-table tr:hover td{background:var(--bg3);}
-.set-name-cell .sl{font-size:13px;font-weight:600;color:var(--t1);}
-.set-name-cell .sd{font-size:12px;color:var(--t3);margin-top:2px;}
-.set-count{font-family:var(--f-mono);font-weight:600;color:var(--blue);}
-.has-analysis{
-  font-size:11px;padding:2px 7px;border-radius:var(--r-sm);
-  font-weight:600;
-}
-.has-analysis.yes{background:rgba(127,176,150,0.18);color:var(--green);}
-.has-analysis.no{background:var(--bg3);color:var(--t3);}
-
-/* ── Toast ── */
-#toast{
-  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
-  background:var(--bg4);color:var(--t1);padding:9px 20px;
-  border-radius:20px;font-size:13px;font-weight:500;
-  opacity:0;pointer-events:none;transition:opacity .2s;z-index:9999;
+/* ── User action buttons ── */
+.user-actions{display:flex;gap:5px;align-items:center;flex-shrink:0;}
+.ua-btn{
+  padding:4px 9px;font-size:12px;font-weight:600;
+  border-radius:var(--r-sm);border:1px solid var(--sep2);
+  background:var(--bg3);color:var(--t2);transition:color .12s,border-color .12s;
   white-space:nowrap;
 }
-#toast.show{opacity:1;}
+.ua-btn:hover{color:var(--t1);border-color:var(--t2);}
+.ua-btn.copy:hover{color:var(--blue);border-color:var(--blue);}
+.ua-btn.dl:hover{color:var(--green);border-color:var(--green);}
+.ua-btn.ul:hover{color:var(--purple);border-color:var(--purple);}
+.ua-btn.arch:hover{color:var(--orange);border-color:var(--orange);}
+.ua-btn.del{border-color:transparent;}
+.ua-btn.del:hover{color:var(--red);border-color:var(--red);}
+.ua-btn:disabled{opacity:.45;cursor:not-allowed;}
 
-/* ── Confirm dialog ── */
-#confirm-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.5);
-  display:flex;align-items:center;justify-content:center;
-  z-index:8000;display:none;
-}
-#confirm-overlay.show{display:flex;}
-.confirm-box{
-  background:var(--bg2);border:1px solid var(--sep2);
-  border-radius:var(--r-lg);padding:28px 28px 22px;max-width:360px;width:90%;
-}
-.confirm-box h3{font-size:16px;margin-bottom:10px;}
-.confirm-box p{font-size:14px;color:var(--t2);line-height:1.6;margin-bottom:20px;}
-.confirm-actions{display:flex;gap:10px;justify-content:flex-end;}
-.btn-cancel{
-  padding:8px 16px;font-size:14px;border-radius:var(--r-sm);
-  background:var(--bg3);border:1px solid var(--sep2);color:var(--t2);
-}
+/* ── User detail ── */
+.user-detail{display:none;border-top:1px solid var(--sep2);padding:10px 14px 14px;}
+.user-card.open .user-detail{display:block;}
+.detail-loading{color:var(--t3);font-size:13px;padding:6px 0;}
+.sets-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px;}
+.sets-table th{text-align:left;padding:6px 8px;font-size:11px;font-weight:600;color:var(--t3);letter-spacing:.4px;text-transform:uppercase;border-bottom:1px solid var(--sep2);}
+.sets-table td{padding:8px 8px;border-bottom:1px solid var(--sep);}
+.sets-table tr:last-child td{border-bottom:none;}
+.pct-bar{display:inline-block;height:5px;border-radius:3px;background:var(--green);vertical-align:middle;margin-right:5px;min-width:2px;}
+.tag-red{color:var(--red);}
+.tag-org{color:var(--orange);}
+.sync-time{color:var(--t3);}
+
+/* ── Empty ── */
+.empty-state{text-align:center;padding:50px 20px;color:var(--t3);font-size:14px;line-height:1.8;}
+.empty-emoji{font-size:32px;margin-bottom:10px;}
+.loading-msg{color:var(--t3);font-size:14px;text-align:center;padding:40px;}
+
+/* ════ SETS tab ════ */
+.sets-toolbar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.set-tbl{width:100%;border-collapse:collapse;font-size:14px;}
+.set-tbl th{text-align:left;padding:8px 10px;font-size:11px;font-weight:600;color:var(--t3);letter-spacing:.4px;text-transform:uppercase;border-bottom:1px solid var(--sep2);background:var(--bg2);position:sticky;top:0;z-index:1;}
+.set-tbl td{padding:10px 10px;border-bottom:1px solid var(--sep);vertical-align:middle;}
+.set-tbl tr:hover td{background:var(--bg3);}
+.sn-label{font-size:14px;font-weight:600;}
+.sn-desc{font-size:12px;color:var(--t3);margin-top:2px;}
+.sn-file{font-size:11px;color:var(--t3);font-family:var(--f-mono);margin-top:2px;}
+.set-count{font-family:var(--f-mono);font-weight:600;color:var(--blue);}
+.ai-badge{font-size:11px;padding:2px 6px;border-radius:var(--r-sm);font-weight:600;}
+.ai-yes{background:rgba(127,176,150,0.18);color:var(--green);}
+.ai-no{background:var(--bg3);color:var(--t3);}
+
+/* Set action buttons */
+.set-actions{display:flex;gap:4px;flex-wrap:wrap;}
+.sa-btn{padding:4px 8px;font-size:12px;font-weight:600;border-radius:var(--r-sm);border:1px solid var(--sep2);background:var(--bg3);color:var(--t2);transition:color .12s,border-color .12s;white-space:nowrap;}
+.sa-btn:hover{color:var(--t1);border-color:var(--t2);}
+.sa-btn.dl:hover{color:var(--green);border-color:var(--green);}
+.sa-btn.cp:hover{color:var(--blue);border-color:var(--blue);}
+.sa-btn.ul:hover{color:var(--purple);border-color:var(--purple);}
+.sa-btn.ed:hover{color:var(--orange);border-color:var(--orange);}
+.sa-btn.rn:hover{color:var(--teal,var(--blue));border-color:var(--teal,var(--blue));}
+.sa-btn.dl-set:hover{color:var(--red);border-color:var(--red);}
+.sa-btn:disabled{opacity:.4;cursor:not-allowed;}
+
+/* Inline edit row */
+.inline-edit-row td{background:var(--bg3) !important;}
+.ie-input{width:100%;background:var(--bg4);border:1px solid var(--blue);border-radius:var(--r-sm);padding:5px 8px;color:var(--t1);font-size:13px;}
+.ie-input:focus{outline:none;}
+.ie-actions{display:flex;gap:6px;margin-top:6px;}
+.ie-save{padding:5px 14px;font-size:12px;font-weight:600;border-radius:var(--r-sm);background:var(--blue);border:none;color:var(--bg);}
+.ie-cancel{padding:5px 10px;font-size:12px;border-radius:var(--r-sm);background:var(--bg4);border:1px solid var(--sep2);color:var(--t2);}
+
+/* ════ Modal / Overlay ════ */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:8000;padding:16px;}
+.overlay.show{display:flex;}
+.modal-box{background:var(--bg2);border:1px solid var(--sep2);border-radius:var(--r-lg);padding:26px 24px 22px;max-width:420px;width:100%;}
+.modal-box h3{font-size:16px;margin-bottom:8px;}
+.modal-box p{font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:16px;}
+.modal-field{margin-bottom:12px;}
+.modal-field label{display:block;font-size:12px;color:var(--t3);margin-bottom:5px;letter-spacing:.3px;}
+.modal-input{width:100%;background:var(--bg3);border:1px solid var(--sep2);border-radius:var(--r-sm);padding:8px 11px;color:var(--t1);font-size:14px;}
+.modal-input:focus{outline:none;border-color:var(--blue);}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;}
+.btn-cancel{padding:8px 16px;font-size:14px;border-radius:var(--r-sm);background:var(--bg3);border:1px solid var(--sep2);color:var(--t2);}
 .btn-cancel:hover{color:var(--t1);}
-.btn-danger{
-  padding:8px 16px;font-size:14px;border-radius:var(--r-sm);font-weight:600;
-  background:var(--red);border:none;color:#fff;
-}
+.btn-primary{padding:8px 18px;font-size:14px;border-radius:var(--r-sm);font-weight:600;background:var(--blue);border:none;color:var(--bg);}
+.btn-primary:hover{opacity:.85;}
+.btn-danger{padding:8px 18px;font-size:14px;border-radius:var(--r-sm);font-weight:600;background:var(--red);border:none;color:#fff;}
 .btn-danger:hover{opacity:.85;}
 
-/* ── Loading ── */
-.loading-msg{
-  color:var(--t3);font-size:14px;text-align:center;padding:40px;
-}
+/* ── Toast ── */
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--bg4);color:var(--t1);padding:8px 20px;border-radius:20px;font-size:13px;font-weight:500;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9999;white-space:nowrap;border:1px solid var(--sep2);}
+#toast.show{opacity:1;}
 
-@media(max-width:600px){
-  .stat-card{min-width:120px;}
+@media(max-width:640px){
   .user-time{display:none;}
+  .set-tbl .hide-sm{display:none;}
+  .set-actions .sa-btn span{display:none;}
 }
 </style>
 </head>
 <body>
 <div id="app">
 
-  <!-- Topbar -->
   <header id="topbar">
-    <h1>📋 题库管理后台</h1>
-    <a class="back-link" href="Index.html">← 返回答题</a>
+    <h1>📋 管理后台</h1>
+    <a class="back-link" href="index.html">← 答题</a>
     <div class="theme-row">
       <button class="th-btn on" data-t="midnight" title="暗夜"></button>
       <button class="th-btn" data-t="cream" title="奶油"></button>
@@ -271,322 +212,568 @@ a{color:var(--blue);text-decoration:none;}
     </div>
   </header>
 
-  <!-- Tabs -->
   <nav id="tabs">
     <button class="tab on" data-tab="users">用户管理</button>
-    <button class="tab" data-tab="sets">题库列表</button>
+    <button class="tab" data-tab="sets">题库管理</button>
   </nav>
 
-  <!-- Content -->
   <div id="content">
-    <div id="view-users" class="view">
+    <!-- ═══ USERS ═══ -->
+    <div id="view-users" class="view active">
       <div class="loading-msg">加载中…</div>
     </div>
-    <div id="view-sets" class="view" style="display:none">
+
+    <!-- ═══ SETS ═══ -->
+    <div id="view-sets" class="view">
       <div class="loading-msg">加载中…</div>
     </div>
   </div>
-
 </div>
 
-<!-- Toast -->
 <div id="toast"></div>
 
-<!-- Confirm dialog -->
-<div id="confirm-overlay">
-  <div class="confirm-box">
-    <h3 id="confirm-title">确认删除</h3>
+<!-- Confirm overlay -->
+<div class="overlay" id="confirm-overlay">
+  <div class="modal-box">
+    <h3 id="confirm-title">确认操作</h3>
     <p id="confirm-msg"></p>
-    <div class="confirm-actions">
+    <div class="modal-actions">
       <button class="btn-cancel" id="confirm-cancel">取消</button>
-      <button class="btn-danger" id="confirm-ok">删除</button>
+      <button class="btn-danger" id="confirm-ok">确认</button>
     </div>
   </div>
 </div>
+
+<!-- Generic input modal -->
+<div class="overlay" id="input-overlay">
+  <div class="modal-box">
+    <h3 id="input-title">输入</h3>
+    <div id="input-fields"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" id="input-cancel">取消</button>
+      <button class="btn-primary" id="input-ok">确认</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden file input -->
+<input type="file" id="file-input" accept=".json" style="display:none">
 
 <script>
 const API = 'admin_api.php';
 
-// ── Theme ────────────────────────────────────────────────────────
+// ── Theme ─────────────────────────────────────────────────────
 function applyTheme(t){
   document.documentElement.dataset.theme = t;
   document.querySelectorAll('.th-btn').forEach(b=>b.classList.toggle('on', b.dataset.t===t));
-  try{ localStorage.setItem('admin_theme', t); }catch(e){}
+  try{ localStorage.setItem('admin_theme',t); }catch(e){}
 }
 document.querySelectorAll('.th-btn').forEach(b=>b.onclick=()=>applyTheme(b.dataset.t));
 try{ const t=localStorage.getItem('admin_theme'); if(t) applyTheme(t); }catch(e){}
 
-// ── Toast ────────────────────────────────────────────────────────
-let _toastTimer;
-function showToast(msg){
-  const el = document.getElementById('toast');
-  el.textContent = msg; el.classList.add('show');
-  clearTimeout(_toastTimer);
-  _toastTimer = setTimeout(()=>el.classList.remove('show'), 2600);
+// ── Toast ─────────────────────────────────────────────────────
+let _tt;
+function toast(msg,dur=2800){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  clearTimeout(_tt); _tt=setTimeout(()=>el.classList.remove('show'),dur);
 }
 
-// ── Confirm dialog ───────────────────────────────────────────────
-let _confirmResolve = null;
-function showConfirm(title, msg){
-  return new Promise(resolve=>{
-    _confirmResolve = resolve;
-    document.getElementById('confirm-title').textContent = title;
-    document.getElementById('confirm-msg').textContent = msg;
+// ── Confirm ───────────────────────────────────────────────────
+let _cfRes=null;
+function confirm2(title,msg){
+  return new Promise(r=>{
+    _cfRes=r;
+    document.getElementById('confirm-title').textContent=title;
+    document.getElementById('confirm-msg').textContent=msg;
     document.getElementById('confirm-overlay').classList.add('show');
   });
 }
-document.getElementById('confirm-cancel').onclick = ()=>{
-  document.getElementById('confirm-overlay').classList.remove('show');
-  if(_confirmResolve){ _confirmResolve(false); _confirmResolve=null; }
-};
-document.getElementById('confirm-ok').onclick = ()=>{
-  document.getElementById('confirm-overlay').classList.remove('show');
-  if(_confirmResolve){ _confirmResolve(true); _confirmResolve=null; }
-};
+document.getElementById('confirm-cancel').onclick=()=>{ document.getElementById('confirm-overlay').classList.remove('show'); if(_cfRes){_cfRes(false);_cfRes=null;} };
+document.getElementById('confirm-ok').onclick=()=>{ document.getElementById('confirm-overlay').classList.remove('show'); if(_cfRes){_cfRes(true);_cfRes=null;} };
 
-// ── Tabs ─────────────────────────────────────────────────────────
-let _activeTab = 'users';
-let _usersLoaded = false, _setsLoaded = false;
-
-document.querySelectorAll('.tab').forEach(btn=>{
-  btn.onclick = ()=>{
-    _activeTab = btn.dataset.tab;
-    document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on', b===btn));
-    document.getElementById('view-users').style.display = _activeTab==='users'?'':'none';
-    document.getElementById('view-sets').style.display  = _activeTab==='sets' ?'':'none';
-    if(_activeTab==='users' && !_usersLoaded) loadUsers();
-    if(_activeTab==='sets'  && !_setsLoaded)  loadSets();
-  };
+// ── Input modal ───────────────────────────────────────────────
+let _imRes=null;
+function inputModal(title, fields){
+  /* fields: [{id,label,value,placeholder}] */
+  return new Promise(r=>{
+    _imRes=r;
+    document.getElementById('input-title').textContent=title;
+    document.getElementById('input-fields').innerHTML = fields.map(f=>`
+      <div class="modal-field">
+        <label>${f.label}</label>
+        <input class="modal-input" id="im-${f.id}" value="${(f.value||'').replace(/"/g,'&quot;')}" placeholder="${f.placeholder||''}">
+      </div>`).join('');
+    document.getElementById('input-overlay').classList.add('show');
+    document.querySelector('#input-fields .modal-input')?.focus();
+  });
+}
+document.getElementById('input-cancel').onclick=()=>{ document.getElementById('input-overlay').classList.remove('show'); if(_imRes){_imRes(null);_imRes=null;} };
+document.getElementById('input-ok').onclick=()=>{
+  const fields={};
+  document.querySelectorAll('#input-fields .modal-input').forEach(el=>{
+    fields[el.id.replace('im-','')]=el.value.trim();
+  });
+  document.getElementById('input-overlay').classList.remove('show');
+  if(_imRes){_imRes(fields);_imRes=null;}
+};
+document.getElementById('input-overlay').addEventListener('keydown',e=>{
+  if(e.key==='Enter') document.getElementById('input-ok').click();
+  if(e.key==='Escape') document.getElementById('input-cancel').click();
 });
 
-// ── Format helpers ───────────────────────────────────────────────
+// ── File picker helper ────────────────────────────────────────
+function pickFile(accept='.json'){
+  return new Promise(r=>{
+    const fi=document.getElementById('file-input');
+    fi.accept=accept; fi.value='';
+    fi.onchange=()=>{ const f=fi.files[0]; fi.onchange=null; r(f||null); };
+    fi.click();
+  });
+}
+
+// ── Copy to clipboard ─────────────────────────────────────────
+function copyText(text){
+  if(navigator.clipboard) navigator.clipboard.writeText(text).then(()=>toast('已复制：'+text)).catch(()=>toast(text));
+  else toast('ID：'+text);
+}
+
+// ── Format date ───────────────────────────────────────────────
 function fmtDate(iso){
   if(!iso) return '—';
-  const d = new Date(iso);
+  const d=new Date(iso);
   if(isNaN(d)) return iso;
   return d.toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
 }
 
-// ── Users view ───────────────────────────────────────────────────
-let _allUsers = [];
-let _searchQ = '';
-let _sortBy = 'lastSync';
+// ══════════════════════════════════════════════════════════════
+//  TABS
+// ══════════════════════════════════════════════════════════════
+let _userLoaded=false, _setLoaded=false;
+document.querySelectorAll('.tab').forEach(btn=>{
+  btn.onclick=()=>{
+    const tab=btn.dataset.tab;
+    document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b===btn));
+    document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+tab));
+    if(tab==='users' && !_userLoaded) loadUsers();
+    if(tab==='sets'  && !_setLoaded)  loadSets();
+  };
+});
 
-async function loadUsers(){
-  _usersLoaded = true;
-  const view = document.getElementById('view-users');
-  view.innerHTML = '<div class="loading-msg">正在加载用户数据…</div>';
+// ══════════════════════════════════════════════════════════════
+//  USERS
+// ══════════════════════════════════════════════════════════════
+let _allUsers=[], _searchQ='', _sortBy='lastSync', _showArchived=false;
+
+async function loadUsers(force=false){
+  _userLoaded=true;
+  if(!force) document.getElementById('view-users').innerHTML='<div class="loading-msg">加载中…</div>';
   try{
-    const r = await fetch(API + '?action=list_users');
-    const d = await r.json();
-    _allUsers = d.users || [];
-    renderUsersView();
+    const r=await fetch(`${API}?action=list_users${_showArchived?'&archived=1':''}`);
+    const d=await r.json();
+    _allUsers=d.users||[];
+    renderUsers();
   }catch(e){
-    view.innerHTML = `<div class="empty-state"><div class="emoji">⚠️</div>加载失败：${e.message}<br><small>请确认 admin_api.php 已部署到服务器</small></div>`;
+    document.getElementById('view-users').innerHTML=`<div class="empty-state"><div class="empty-emoji">⚠️</div>加载失败：${e.message}<br><small>请确认 admin_api.php 已部署到服务器</small></div>`;
   }
 }
 
-function renderUsersView(){
-  const view = document.getElementById('view-users');
-  let users = [..._allUsers];
-
-  // Filter
-  if(_searchQ){
-    const q = _searchQ.toLowerCase();
-    users = users.filter(u=>u.uid.toLowerCase().includes(q));
-  }
-
-  // Sort
-  if(_sortBy==='lastSync') users.sort((a,b)=>b.lastSync.localeCompare(a.lastSync));
-  else if(_sortBy==='answered') users.sort((a,b)=>b.answered-a.answered);
+function renderUsers(){
+  const view=document.getElementById('view-users');
+  let users=[..._allUsers];
+  if(_searchQ){ const q=_searchQ.toLowerCase(); users=users.filter(u=>u.uid.toLowerCase().includes(q)); }
+  if(_sortBy==='answered') users.sort((a,b)=>b.answered-a.answered);
   else if(_sortBy==='uid') users.sort((a,b)=>a.uid.localeCompare(b.uid));
+  else users.sort((a,b)=>b.lastSync.localeCompare(a.lastSync));
 
-  // Stats
-  const total = _allUsers.length;
-  const totalAns = _allUsers.reduce((s,u)=>s+u.answered,0);
-  const totalWrong = _allUsers.reduce((s,u)=>s+u.wrong,0);
+  const total=_allUsers.length;
+  const totalAns=_allUsers.reduce((s,u)=>s+u.answered,0);
+  const totalWrong=_allUsers.reduce((s,u)=>s+u.wrong,0);
 
-  let html = `
-    <div class="stat-bar">
-      <div class="stat-card"><div class="sv">${total}</div><div class="sl">用户总数</div></div>
-      <div class="stat-card"><div class="sv">${totalAns}</div><div class="sl">总答题次</div></div>
-      <div class="stat-card"><div class="sv">${totalWrong}</div><div class="sl">总错题次</div></div>
-    </div>
-    <div class="toolbar">
-      <input class="search-box" id="user-search" placeholder="搜索用户ID…" value="${_searchQ}">
-      <select class="sort-select" id="user-sort">
-        <option value="lastSync" ${_sortBy==='lastSync'?'selected':''}>按最近同步</option>
-        <option value="answered" ${_sortBy==='answered'?'selected':''}>按答题数</option>
-        <option value="uid"      ${_sortBy==='uid'?'selected':''}>按 ID 排序</option>
-      </select>
-      <span class="count-label">共 ${users.length} 位用户</span>
-    </div>
-    <div class="user-grid">`;
+  let h=`
+  <div class="stat-bar">
+    <div class="stat-card"><div class="sv">${total}</div><div class="sl">${_showArchived?'已存档用户':'用户总数'}</div></div>
+    <div class="stat-card"><div class="sv">${totalAns.toLocaleString()}</div><div class="sl">总答题数</div></div>
+    <div class="stat-card"><div class="sv">${totalWrong.toLocaleString()}</div><div class="sl">总错题数</div></div>
+  </div>
+  <div class="toolbar">
+    <input class="search-box" id="u-search" placeholder="搜索用户ID…" value="${_searchQ}">
+    <select class="sort-sel" id="u-sort">
+      <option value="lastSync" ${_sortBy==='lastSync'?'selected':''}>最近同步</option>
+      <option value="answered" ${_sortBy==='answered'?'selected':''}>答题数</option>
+      <option value="uid"      ${_sortBy==='uid'?'selected':''}>ID 排序</option>
+    </select>
+    <button class="arch-toggle ${_showArchived?'on':''}" id="arch-toggle-btn">${_showArchived?'📦 查看活跃':'📦 存档用户'}</button>
+    <button class="upload-btn" id="u-import-btn">⬆ 导入进度</button>
+    <span class="count-lbl">${users.length} 位用户</span>
+  </div>
+  <div class="user-grid" id="user-grid">`;
 
   if(users.length===0){
-    html += `<div class="empty-state"><div class="emoji">👥</div>${_searchQ?'没有匹配的用户':'暂无用户数据'}</div>`;
+    h+=`<div class="empty-state"><div class="empty-emoji">👥</div>${_searchQ?'没有匹配用户':(_showArchived?'暂无存档用户':'暂无用户数据')}</div>`;
   } else {
     users.forEach(u=>{
-      const pct = u.answered > 0 ? Math.round(u.correct/u.answered*100) : 0;
-      html += `
-      <div class="user-card" id="uc-${u.uid}">
+      const pct=u.answered>0?Math.round(u.correct/u.answered*100):0;
+      const arch=u.archived||_showArchived;
+      h+=`<div class="user-card${arch?' archived':''}" id="uc-${u.uid}">
         <div class="user-head" data-uid="${u.uid}">
           <div class="uid-badge">${u.uid}</div>
           <div class="user-meta">
             <div class="um-row">
-              <span class="um-chip">练了 <span class="num">${u.sets}</span> 套题库</span>
-              <span class="um-chip">答题 <span class="num">${u.answered}</span> 次</span>
-              <span class="um-chip" style="color:var(--green)">答对 <span class="num">${pct}%</span></span>
-              ${u.wrong>0?`<span class="um-chip" style="color:var(--red)">错误 <span class="num">${u.wrong}</span> 次</span>`:''}
+              <span>练了 <span class="um-num">${u.sets}</span> 套</span>
+              <span>答 <span class="um-num">${u.answered}</span> 题</span>
+              <span style="color:var(--green)">正确 <span class="um-num">${pct}%</span></span>
+              ${u.wrong>0?`<span style="color:var(--red)">错 <span class="um-num">${u.wrong}</span></span>`:''}
             </div>
           </div>
           <span class="user-time">${fmtDate(u.lastSync)}</span>
-          <button class="del-btn" data-uid="${u.uid}">删除</button>
+          <div class="user-actions" onclick="event.stopPropagation()">
+            <button class="ua-btn copy" data-uid="${u.uid}" title="复制ID">📋</button>
+            <button class="ua-btn dl" data-uid="${u.uid}" title="下载数据">⬇</button>
+            <button class="ua-btn ul" data-uid="${u.uid}" title="上传进度">⬆</button>
+            <button class="ua-btn arch" data-uid="${u.uid}" title="${arch?'取消存档':'存档'}">${arch?'🗂':'📦'}</button>
+            <button class="ua-btn del" data-uid="${u.uid}" title="删除">🗑</button>
+          </div>
           <span class="chevron">▼</span>
         </div>
         <div class="user-detail" id="ud-${u.uid}">
-          <div class="detail-loading">点击展开加载详情…</div>
+          <div class="detail-loading">展开加载详情…</div>
         </div>
       </div>`;
     });
   }
-  html += `</div>`;
-  view.innerHTML = html;
+  h+=`</div>`;
+  view.innerHTML=h;
 
-  // Events
-  document.getElementById('user-search')?.addEventListener('input', e=>{
-    _searchQ = e.target.value; renderUsersView();
+  // Bind toolbar
+  document.getElementById('u-search')?.addEventListener('input',e=>{ _searchQ=e.target.value; renderUsers(); });
+  document.getElementById('u-sort')?.addEventListener('change',e=>{ _sortBy=e.target.value; renderUsers(); });
+  document.getElementById('arch-toggle-btn')?.addEventListener('click',()=>{
+    _showArchived=!_showArchived; _searchQ=''; loadUsers(true);
   });
-  document.getElementById('user-sort')?.addEventListener('change', e=>{
-    _sortBy = e.target.value; renderUsersView();
-  });
+  document.getElementById('u-import-btn')?.addEventListener('click', importUserProgress);
 
-  view.querySelectorAll('.user-head').forEach(head=>{
-    head.addEventListener('click', e=>{
-      if(e.target.classList.contains('del-btn')) return; // handled below
-      const uid = head.dataset.uid;
-      const card = document.getElementById('uc-'+uid);
-      const isOpen = card.classList.contains('open');
-      card.classList.toggle('open', !isOpen);
-      if(!isOpen) loadUserDetail(uid);
+  // Card expand
+  view.querySelectorAll('.user-head').forEach(h=>{
+    h.addEventListener('click',e=>{
+      if(e.target.closest('.user-actions')) return;
+      const uid=h.dataset.uid;
+      const card=document.getElementById('uc-'+uid);
+      const wasOpen=card.classList.contains('open');
+      card.classList.toggle('open',!wasOpen);
+      if(!wasOpen) loadUserDetail(uid);
     });
   });
 
-  view.querySelectorAll('.del-btn').forEach(btn=>{
-    btn.addEventListener('click', async e=>{
-      e.stopPropagation();
-      const uid = btn.dataset.uid;
-      const ok = await showConfirm('删除用户', `确认删除用户 "${uid}" 的所有答题记录？此操作不可撤销。`);
-      if(!ok) return;
-      btn.disabled = true;
-      try{
-        const r = await fetch(`${API}?action=delete_user&uid=${encodeURIComponent(uid)}`, {method:'POST'});
-        const d = await r.json();
-        if(d.error) throw new Error(d.error);
-        showToast(`已删除用户 ${uid}（${d.deleted} 条记录）`);
-        _allUsers = _allUsers.filter(u=>u.uid!==uid);
-        renderUsersView();
-      }catch(err){
-        showToast('删除失败：' + err.message);
-        btn.disabled = false;
-      }
-    });
-  });
+  // Action buttons
+  view.querySelectorAll('.ua-btn.copy').forEach(b=>b.onclick=()=>copyText(b.dataset.uid));
+  view.querySelectorAll('.ua-btn.dl').forEach(b=>b.onclick=()=>downloadUser(b.dataset.uid, b));
+  view.querySelectorAll('.ua-btn.ul').forEach(b=>b.onclick=()=>uploadUserProgress(b.dataset.uid, b));
+  view.querySelectorAll('.ua-btn.arch').forEach(b=>b.onclick=()=>archiveUser(b.dataset.uid, b));
+  view.querySelectorAll('.ua-btn.del').forEach(b=>b.onclick=()=>deleteUser(b.dataset.uid, b));
 }
 
 async function loadUserDetail(uid){
-  const detailEl = document.getElementById('ud-'+uid);
-  if(!detailEl || detailEl.dataset.loaded) return;
-  detailEl.dataset.loaded = '1';
-  detailEl.innerHTML = '<div class="detail-loading">加载中…</div>';
+  const el=document.getElementById('ud-'+uid);
+  if(!el||el.dataset.loaded) return;
+  el.dataset.loaded='1';
+  el.innerHTML='<div class="detail-loading">加载中…</div>';
   try{
-    const r = await fetch(`${API}?action=user_sets&uid=${encodeURIComponent(uid)}`);
-    const d = await r.json();
-    const sets = d.sets || [];
-    if(sets.length===0){
-      detailEl.innerHTML = '<div class="detail-loading" style="color:var(--t3)">暂无题库记录</div>';
-      return;
-    }
-    let html = `<table class="sets-table">
-      <thead><tr>
-        <th>题库</th>
-        <th>已答</th>
-        <th>答对率</th>
-        <th>错题</th>
-        <th>收藏</th>
-        <th>最近同步</th>
-      </tr></thead><tbody>`;
+    const r=await fetch(`${API}?action=user_sets&uid=${encodeURIComponent(uid)}`);
+    const d=await r.json();
+    const sets=d.sets||[];
+    if(!sets.length){ el.innerHTML='<div class="detail-loading">暂无记录</div>'; return; }
+    let h=`<table class="sets-table"><thead><tr>
+      <th>题库</th><th>已答</th><th>正确率</th><th>错题</th><th>收藏</th><th>同步时间</th>
+    </tr></thead><tbody>`;
     sets.forEach(s=>{
-      const pctW = Math.min(100, s.pct);
-      html += `<tr>
-        <td>${s.setLabel || s.setName}</td>
+      const pct=s.answered>0?Math.round(s.correct/s.answered*100):0;
+      h+=`<tr>
+        <td>${s.setLabel||s.setName}</td>
         <td>${s.answered}${s.total?' / '+s.total:''}</td>
-        <td>
-          <span class="pct-bar" style="width:${pctW*0.6}px"></span>
-          <span class="pct-val">${s.pct}%</span>
-        </td>
-        <td class="tag-wrong">${s.wrong > 0 ? s.wrong : '<span style="color:var(--t3)">—</span>'}</td>
-        <td class="tag-bm">${s.bookmarks > 0 ? '⭐'+s.bookmarks : '<span style="color:var(--t3)">—</span>'}</td>
+        <td><span class="pct-bar" style="width:${Math.min(60,pct*0.6)}px"></span>${pct}%</td>
+        <td class="tag-red">${s.wrong>0?s.wrong:'<span style="color:var(--t3)">—</span>'}</td>
+        <td class="tag-org">${s.bookmarks>0?'⭐'+s.bookmarks:'<span style="color:var(--t3)">—</span>'}</td>
         <td class="sync-time">${fmtDate(s.syncedAt)}</td>
       </tr>`;
     });
-    html += '</tbody></table>';
-    detailEl.innerHTML = html;
-  }catch(e){
-    detailEl.innerHTML = `<div class="detail-loading">加载失败：${e.message}</div>`;
-  }
+    h+='</tbody></table>';
+    el.innerHTML=h;
+  }catch(e){ el.innerHTML=`<div class="detail-loading">加载失败：${e.message}</div>`; }
 }
 
-// ── Sets view ────────────────────────────────────────────────────
-async function loadSets(){
-  _setsLoaded = true;
-  const view = document.getElementById('view-sets');
-  view.innerHTML = '<div class="loading-msg">正在加载题库列表…</div>';
+function downloadUser(uid, btn){
+  btn.disabled=true;
+  window.location.href=`${API}?action=download_user&uid=${encodeURIComponent(uid)}`;
+  setTimeout(()=>btn.disabled=false, 1500);
+}
+
+async function uploadUserProgress(uid, btn){
+  const file=await pickFile('.json');
+  if(!file) return;
+  btn.disabled=true;
   try{
-    const r = await fetch(API + '?action=list_sets');
-    const sets = await r.json();
-    if(!Array.isArray(sets)) throw new Error('格式错误');
+    const text=await file.text();
+    const data=JSON.parse(text);
+    // Inject uid if missing
+    if(data.sets && Array.isArray(data.sets)){
+      data.sets.forEach(s=>{ if(!s.uid) s.uid=uid; });
+    } else if(!data.uid){ data.uid=uid; }
+    const r=await fetch(`${API}?action=import_user_set`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+    const d=await r.json();
+    if(d.error) throw new Error(d.error);
+    toast(`已上传：${d.imported!==undefined?d.imported+'套':uid}`);
+    // Reload detail
+    const detailEl=document.getElementById('ud-'+uid);
+    if(detailEl){ detailEl.dataset.loaded=''; detailEl.innerHTML='<div class="detail-loading">加载中…</div>'; if(document.getElementById('uc-'+uid)?.classList.contains('open')) loadUserDetail(uid); }
+  }catch(e){ toast('上传失败：'+e.message); }
+  btn.disabled=false;
+}
 
-    const totalQ = sets.reduce((s,q)=>s+(q.count||0), 0);
-    const withAI = sets.filter(q=>q.has_analysis).length;
+async function importUserProgress(){
+  const file=await pickFile('.json');
+  if(!file) return;
+  try{
+    const text=await file.text();
+    const data=JSON.parse(text);
+    const r=await fetch(`${API}?action=import_user_set`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+    const d=await r.json();
+    if(d.error) throw new Error(d.error);
+    toast(`导入成功：${d.imported!==undefined?d.imported+'套数据':''}`);
+    loadUsers(true);
+  }catch(e){ toast('导入失败：'+e.message); }
+}
 
-    let html = `
-      <div class="stat-bar">
-        <div class="stat-card"><div class="sv">${sets.length}</div><div class="sl">题库数</div></div>
-        <div class="stat-card"><div class="sv">${totalQ.toLocaleString()}</div><div class="sl">题目总数</div></div>
-        <div class="stat-card"><div class="sv">${withAI}</div><div class="sl">含 AI 解析</div></div>
-      </div>
-      <table class="set-grid-table">
-        <thead><tr>
-          <th>#</th>
-          <th>题库名称</th>
-          <th>题目数</th>
-          <th>AI 解析</th>
-          <th>文件</th>
-        </tr></thead>
-        <tbody>`;
+async function archiveUser(uid, btn){
+  const card=document.getElementById('uc-'+uid);
+  const isArchived=card?.classList.contains('archived')||_showArchived;
+  const action=isArchived?'unarchive_user':'archive_user';
+  const label=isArchived?'取消存档':'存档';
+  const ok=await confirm2(label+'用户', `确认${label}用户 "${uid}"？`);
+  if(!ok) return;
+  btn.disabled=true;
+  try{
+    const r=await fetch(`${API}?action=${action}&uid=${encodeURIComponent(uid)}`,{method:'POST'});
+    const d=await r.json();
+    if(d.error) throw new Error(d.error);
+    toast(`用户 ${uid} 已${label}`);
+    loadUsers(true);
+  }catch(e){ toast(label+'失败：'+e.message); btn.disabled=false; }
+}
 
-    sets.forEach((s,i)=>{
-      html += `<tr>
-        <td style="color:var(--t3);font-size:12px">${i+1}</td>
-        <td class="set-name-cell">
-          <div class="sl">${s.label}</div>
-          <div class="sd">${s.desc||''}</div>
-        </td>
-        <td class="set-count">${(s.count||0).toLocaleString()}</td>
-        <td><span class="has-analysis ${s.has_analysis?'yes':'no'}">${s.has_analysis?'✓ 有':'—'}</span></td>
-        <td style="font-size:12px;color:var(--t3);font-family:var(--f-mono)">${s.file||''}</td>
-      </tr>`;
-    });
+async function deleteUser(uid, btn){
+  const ok=await confirm2('删除用户', `确认删除用户 "${uid}" 的全部答题记录？不可撤销。`);
+  if(!ok) return;
+  btn.disabled=true;
+  try{
+    const r=await fetch(`${API}?action=delete_user&uid=${encodeURIComponent(uid)}`,{method:'POST'});
+    const d=await r.json();
+    if(d.error) throw new Error(d.error);
+    toast(`已删除用户 ${uid}（${d.deleted} 条）`);
+    _allUsers=_allUsers.filter(u=>u.uid!==uid);
+    renderUsers();
+  }catch(e){ toast('删除失败：'+e.message); btn.disabled=false; }
+}
 
-    html += '</tbody></table>';
-    view.innerHTML = html;
+// ══════════════════════════════════════════════════════════════
+//  SETS
+// ══════════════════════════════════════════════════════════════
+let _allSets=[];
+
+async function loadSets(force=false){
+  _setLoaded=true;
+  if(!force) document.getElementById('view-sets').innerHTML='<div class="loading-msg">加载中…</div>';
+  try{
+    const r=await fetch(`${API}?action=list_sets`);
+    _allSets=await r.json();
+    renderSets();
   }catch(e){
-    view.innerHTML = `<div class="empty-state"><div class="emoji">⚠️</div>加载失败：${e.message}</div>`;
+    document.getElementById('view-sets').innerHTML=`<div class="empty-state"><div class="empty-emoji">⚠️</div>加载失败：${e.message}</div>`;
   }
 }
 
-// ── Init ─────────────────────────────────────────────────────────
+function renderSets(){
+  const view=document.getElementById('view-sets');
+  const total=_allSets.length;
+  const totalQ=_allSets.reduce((s,q)=>s+(q.count||0),0);
+  const withAI=_allSets.filter(s=>s.has_analysis).length;
+
+  let h=`
+  <div class="stat-bar">
+    <div class="stat-card"><div class="sv">${total}</div><div class="sl">题库数</div></div>
+    <div class="stat-card"><div class="sv">${totalQ.toLocaleString()}</div><div class="sl">题目总数</div></div>
+    <div class="stat-card"><div class="sv">${withAI}</div><div class="sl">含AI解析</div></div>
+  </div>
+  <div class="sets-toolbar">
+    <button class="upload-btn" id="set-upload-btn">⬆ 上传新题库</button>
+  </div>
+  <table class="set-tbl" id="set-tbl">
+    <thead><tr>
+      <th style="width:36px">#</th>
+      <th>题库名称</th>
+      <th style="width:80px">题数</th>
+      <th style="width:70px" class="hide-sm">解析</th>
+      <th style="width:260px">操作</th>
+    </tr></thead>
+    <tbody>`;
+
+  _allSets.forEach((s,i)=>{
+    h+=`<tr id="str-${s.name}">
+      <td style="color:var(--t3);font-size:12px">${i+1}</td>
+      <td>
+        <div class="sn-label" id="sl-${s.name}">${s.label}</div>
+        <div class="sn-desc"  id="sd-${s.name}">${s.desc||''}</div>
+        <div class="sn-file">${s.file||''}</div>
+      </td>
+      <td class="set-count">${(s.count||0).toLocaleString()}</td>
+      <td class="hide-sm"><span class="ai-badge ${s.has_analysis?'ai-yes':'ai-no'}">${s.has_analysis?'✓ 有':'—'}</span></td>
+      <td>
+        <div class="set-actions">
+          <button class="sa-btn dl"    data-name="${s.name}" title="下载">⬇ <span>下载</span></button>
+          <button class="sa-btn cp"    data-name="${s.name}" title="复制">⧉ <span>复制</span></button>
+          <button class="sa-btn ul"    data-name="${s.name}" title="上传替换">⬆ <span>上传</span></button>
+          <button class="sa-btn ed"    data-name="${s.name}" title="编辑标题">✏ <span>标题</span></button>
+          <button class="sa-btn rn"    data-name="${s.name}" title="重命名">⟳ <span>重命名</span></button>
+          <button class="sa-btn dl-set" data-name="${s.name}" title="删除">🗑</button>
+        </div>
+      </td>
+    </tr>`;
+  });
+
+  h+=`</tbody></table>`;
+  view.innerHTML=h;
+
+  document.getElementById('set-upload-btn')?.addEventListener('click', uploadNewSet);
+
+  view.querySelectorAll('.sa-btn.dl').forEach(b=>b.onclick=()=>downloadSet(b.dataset.name, b));
+  view.querySelectorAll('.sa-btn.cp').forEach(b=>b.onclick=()=>copySet(b.dataset.name));
+  view.querySelectorAll('.sa-btn.ul').forEach(b=>b.onclick=()=>replaceSetFile(b.dataset.name, b));
+  view.querySelectorAll('.sa-btn.ed').forEach(b=>b.onclick=()=>editSetMeta(b.dataset.name));
+  view.querySelectorAll('.sa-btn.rn').forEach(b=>b.onclick=()=>renameSet(b.dataset.name));
+  view.querySelectorAll('.sa-btn.dl-set').forEach(b=>b.onclick=()=>deleteSet(b.dataset.name, b));
+}
+
+function downloadSet(name, btn){
+  btn.disabled=true;
+  window.location.href=`${API}?action=download_set&name=${encodeURIComponent(name)}`;
+  setTimeout(()=>btn.disabled=false, 1500);
+}
+
+async function editSetMeta(name){
+  const s=_allSets.find(s=>s.name===name);
+  if(!s) return;
+  const res=await inputModal('编辑标题与描述', [
+    {id:'label', label:'显示标题', value:s.label, placeholder:'题库标题'},
+    {id:'desc',  label:'描述说明', value:s.desc||'', placeholder:'简短说明'},
+  ]);
+  if(!res) return;
+  if(!res.label){ toast('标题不能为空'); return; }
+  try{
+    const r=await fetch(`${API}?action=update_set_meta`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,label:res.label,desc:res.desc})});
+    const d=await r.json();
+    if(d.error) throw new Error(d.error);
+    // Update local & DOM
+    const entry=_allSets.find(e=>e.name===name);
+    if(entry){ entry.label=res.label; entry.desc=res.desc; }
+    const lEl=document.getElementById('sl-'+name);
+    const dEl=document.getElementById('sd-'+name);
+    if(lEl) lEl.textContent=res.label;
+    if(dEl) dEl.textContent=res.desc;
+    toast('标题已更新');
+  }catch(e){ toast('更新失败：'+e.message); }
+}
+
+async function copySet(name){
+  const s=_allSets.find(s=>s.name===name);
+  const res=await inputModal('复制题库', [
+    {id:'newName',  label:'新的 name（字母/数字/下划线）', value:'', placeholder:'如 questions_MyNew'},
+    {id:'newLabel', label:'新题库标题', value:(s?.label||'')+'（副本）', placeholder:''},
+  ]);
+  if(!res) return;
+  if(!res.newName){ toast('name 不能为空'); return; }
+  try{
+    const r=await fetch(`${API}?action=copy_set`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({src:name,newName:res.newName,newLabel:res.newLabel})});
+    const d=await r.json();
+    if(d.error) throw new Error(d.error);
+    toast('题库已复制：'+res.newName);
+    loadSets(true);
+  }catch(e){ toast('复制失败：'+e.message); }
+}
+
+async function renameSet(name){
+  const s=_allSets.find(s=>s.name===name);
+  const res=await inputModal('重命名题库 name', [
+    {id:'newName', label:'新的 name（字母/数字/下划线，会同步重命名文件）', value:name, placeholder:''},
+  ]);
+  if(!res||!res.newName||res.newName===name) return;
+  try{
+    const r=await fetch(`${API}?action=rename_set`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({oldName:name,newName:res.newName})});
+    const d=await r.json();
+    if(d.error) throw new Error(d.error);
+    toast('重命名完成：'+res.newName);
+    loadSets(true);
+  }catch(e){ toast('重命名失败：'+e.message); }
+}
+
+async function replaceSetFile(name, btn){
+  const ok=await confirm2('上传替换', `将上传新的 JSON 文件替换题库"${name}"的题目数据，确认？`);
+  if(!ok) return;
+  const file=await pickFile('.json');
+  if(!file) return;
+  btn.disabled=true;
+  try{
+    const text=await file.text();
+    // Validate JSON
+    JSON.parse(text);
+    const r=await fetch(`${API}?action=upload_set&name=${encodeURIComponent(name)}`,{
+      method:'POST',headers:{'Content-Type':'application/json'},body:text
+    });
+    const d=await r.json();
+    if(d.error) throw new Error(d.error);
+    toast(`题库已更新：${d.count} 题`);
+    loadSets(true);
+  }catch(e){ toast('上传失败：'+e.message); }
+  btn.disabled=false;
+}
+
+async function uploadNewSet(){
+  const res=await inputModal('上传新题库', [
+    {id:'name',  label:'name（唯一标识，字母/数字/下划线）', value:'', placeholder:'如 questions_MySet'},
+    {id:'label', label:'显示标题', value:'', placeholder:'如 2025-2026 安全员C3 · 新题库'},
+    {id:'desc',  label:'描述（可选）', value:'', placeholder:''},
+  ]);
+  if(!res) return;
+  if(!res.name||!res.label){ toast('name 和标题不能为空'); return; }
+  const file=await pickFile('.json');
+  if(!file) return;
+  try{
+    const text=await file.text();
+    JSON.parse(text); // validate
+    const r=await fetch(`${API}?action=upload_set&name=${encodeURIComponent(res.name)}&label=${encodeURIComponent(res.label)}&desc=${encodeURIComponent(res.desc)}`,{
+      method:'POST',headers:{'Content-Type':'application/json'},body:text
+    });
+    const d=await r.json();
+    if(d.error) throw new Error(d.error);
+    toast(`新题库上传成功：${d.count} 题`);
+    loadSets(true);
+  }catch(e){ toast('上传失败：'+e.message); }
+}
+
+async function deleteSet(name, btn){
+  const ok=await confirm2('删除题库', `确认删除题库"${name}"及其数据文件？此操作不可撤销。`);
+  if(!ok) return;
+  btn.disabled=true;
+  try{
+    const r=await fetch(`${API}?action=delete_set&name=${encodeURIComponent(name)}`,{method:'POST'});
+    const d=await r.json();
+    if(d.error) throw new Error(d.error);
+    toast(`已删除：${name}`);
+    _allSets=_allSets.filter(s=>s.name!==name);
+    renderSets();
+  }catch(e){ toast('删除失败：'+e.message); btn.disabled=false; }
+}
+
+// ── Init ──────────────────────────────────────────────────────
 loadUsers();
 </script>
 </body>
