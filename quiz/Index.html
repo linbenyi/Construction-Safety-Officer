@@ -410,11 +410,21 @@ html[data-theme="terminal"] #qno-display{border-radius:0;border:1px solid var(--
 }
 /* Swipe hints */
 #swipe-hint{
-  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
-  background:rgba(0,0,0,0.68);color:#fff;padding:10px 22px;
-  border-radius:24px;font-size:15px;font-weight:600;letter-spacing:.04em;
+  position:fixed;top:50%;
+  background:var(--bg3);color:var(--t1);
+  border:1px solid var(--sep2);
+  box-shadow:0 2px 16px rgba(0,0,0,0.18);
+  padding:24px 10px;font-size:15px;font-weight:600;
+  writing-mode:vertical-rl;text-orientation:mixed;letter-spacing:.12em;
   pointer-events:none;opacity:0;transition:opacity 0.15s;z-index:9999;
-  white-space:nowrap;
+}
+#swipe-hint.left{
+  left:0;transform:translateY(-50%);
+  border-radius:0 14px 14px 0;border-left:none;
+}
+#swipe-hint.right{
+  right:0;transform:translateY(-50%);
+  border-radius:14px 0 0 14px;border-right:none;
 }
 #swipe-hint.show{opacity:1;}
 #q-wrap{
@@ -2523,8 +2533,10 @@ window.addEventListener('keydown', e=>{
       if(Math.abs(dx) > 20){
         hintEl.classList.add('show');
         if(dx > 0){
+          hintEl.classList.remove('right'); hintEl.classList.add('left');
           hintEl.textContent = state.idx > 0 ? '上一题' : '没有题了';
         } else {
+          hintEl.classList.remove('left'); hintEl.classList.add('right');
           hintEl.textContent = state.idx < QUESTIONS.length - 1 ? '下一题' : '没有题了';
         }
       } else {
@@ -2538,7 +2550,7 @@ window.addEventListener('keydown', e=>{
     dragging = false; horizOk = false;
     hintEl.classList.remove('show');
     const dx = e.changedTouches[0].clientX - startX;
-    const thr = window.innerWidth / 3;
+    const thr = window.innerWidth / 6;
     if(Math.abs(dx) < thr){ snapBack(); return; }
     if(dx < 0 && state.idx < QUESTIONS.length-1){
       slideNav(-1, ()=>{ removeStamp(); stopReadCountdown(); stopReadAutoAdvance(); state.idx++; render(); });
