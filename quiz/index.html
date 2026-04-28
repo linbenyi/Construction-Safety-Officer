@@ -1173,6 +1173,7 @@ html[data-theme="terminal"] .lt-dot{border-radius:0;}
             <input class="cloud-uid-input" id="cloud-uid" type="text" maxlength="16"
               spellcheck="false" placeholder="自动生成" title="换设备时输入相同ID可同步进度">
             <button class="cloud-uid-copy" onclick="cloudCopyUid()" title="复制ID">复制</button>
+            <button class="cloud-uid-copy" onclick="cloudCopyUrl()" id="copy-url-btn" title="复制含用户ID和当前题库的完整链接">🔗</button>
           </div>
           <div class="cloud-btn-row">
             <button class="cloud-btn" id="cloud-push-btn" onclick="cloudPush()">
@@ -2696,6 +2697,21 @@ function cloudCopyUid(){
       .catch(()=>showToast('ID：' + uid));
   } else {
     showToast('ID：' + uid);
+  }
+}
+
+function cloudCopyUrl(){
+  const uid = (document.getElementById('cloud-uid')?.value || '').trim() || _getOrCreateUid();
+  const base = location.href.split('?')[0];
+  const params = new URLSearchParams({ uid });
+  if(_currentSetName) params.set('set', _currentSetName);
+  const url = base + '?' + params.toString();
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url)
+      .then(()=>showToast('链接已复制 🔗'))
+      .catch(()=>showToast(url));
+  } else {
+    showToast(url);
   }
 }
 
