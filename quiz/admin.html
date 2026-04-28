@@ -111,6 +111,7 @@ input,select,textarea{font-family:inherit;}
 }
 .ua-btn:hover{color:var(--t1);border-color:var(--t2);}
 .ua-btn.copy:hover{color:var(--blue);border-color:var(--blue);}
+.ua-btn.link:hover{color:var(--teal,var(--blue));border-color:var(--teal,var(--blue));}
 .ua-btn.dl:hover{color:var(--green);border-color:var(--green);}
 .ua-btn.ul:hover{color:var(--purple);border-color:var(--purple);}
 .ua-btn.arch:hover{color:var(--orange);border-color:var(--orange);}
@@ -338,6 +339,14 @@ function copyText(text){
   else toast('ID：'+text);
 }
 
+function copyUserLink(uid){
+  // Build index.html URL relative to admin.html (same directory)
+  const base = location.href.replace(/\/[^/]*$/, '/index.html');
+  const url = base + '?uid=' + encodeURIComponent(uid);
+  if(navigator.clipboard) navigator.clipboard.writeText(url).then(()=>toast('链接已复制 🔗')).catch(()=>toast(url));
+  else toast(url);
+}
+
 // ── Format date ───────────────────────────────────────────────
 function fmtDate(iso){
   if(!iso) return '—';
@@ -429,6 +438,7 @@ function renderUsers(){
           <span class="user-time">${fmtDate(u.lastSync)}</span>
           <div class="user-actions" onclick="event.stopPropagation()">
             <button class="ua-btn copy" data-uid="${u.uid}" title="复制ID">📋</button>
+            <button class="ua-btn link" data-uid="${u.uid}" title="复制答题链接">🔗</button>
             <button class="ua-btn dl" data-uid="${u.uid}" title="下载数据">⬇</button>
             <button class="ua-btn ul" data-uid="${u.uid}" title="上传进度">⬆</button>
             <button class="ua-btn arch" data-uid="${u.uid}" title="${arch?'取消存档':'存档'}">${arch?'🗂':'📦'}</button>
@@ -467,6 +477,7 @@ function renderUsers(){
 
   // Action buttons
   view.querySelectorAll('.ua-btn.copy').forEach(b=>b.onclick=()=>copyText(b.dataset.uid));
+  view.querySelectorAll('.ua-btn.link').forEach(b=>b.onclick=()=>copyUserLink(b.dataset.uid));
   view.querySelectorAll('.ua-btn.dl').forEach(b=>b.onclick=()=>downloadUser(b.dataset.uid, b));
   view.querySelectorAll('.ua-btn.ul').forEach(b=>b.onclick=()=>uploadUserProgress(b.dataset.uid, b));
   view.querySelectorAll('.ua-btn.arch').forEach(b=>b.onclick=()=>archiveUser(b.dataset.uid, b));
